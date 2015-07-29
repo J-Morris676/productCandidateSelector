@@ -13,7 +13,8 @@ module app.directives.specificationTree {
     interface ISpecificationTreeScope extends ng.IScope {
         data: data.IInstanceNode;
         selectedSubTree: data.IInstanceNode;
-        selectedCandidateParent: data.IInstanceNode;
+        selectedCandidateNode: data.IInstanceNode;
+
         canBeAddedToProductCandidate: boolean;
 
         insertIntoProductCandidate();
@@ -24,9 +25,9 @@ module app.directives.specificationTree {
         public scope = {
             data: "=",
             selectedSubTree: "=?",
-            selectedCandidateParent: "=?",
-            canBeAddedToProductCandidate: "@",
+            selectedCandidateNode: "=?",
 
+            canBeAddedToProductCandidate: "@",
             insertIntoProductCandidate: "@"
         };
         public templateUrl = "scripts/directives/specificationTree/specificationTree.html";
@@ -36,29 +37,42 @@ module app.directives.specificationTree {
             scope.canBeAddedToProductCandidate = false;
 
 
-            scope.$watch("selectedCandidateParent", function() {
+            scope.$watch("selectedCandidateNode", function() {
                 scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
             });
 
              if (scope.data == null) {
                 scope.$watch("data", function () {
                     if (scope.data != null) {
-                        initSubTree();
-                        renderTree();
+                        initSubTreeWithNodeGuidsAndOneToOneCardinality();
+                        renderTreeAndRegisterEvents();
                     }
                 }, true)
             }
             else {
-                 initSubTree();
-                 renderTree();
+                 initSubTreeWithNodeGuidsAndOneToOneCardinality();
+                 renderTreeAndRegisterEvents();
             }
 
-            function initSubTree() {
+            function initSubTreeWithNodeGuidsAndOneToOneCardinality() {
                 scope.selectedSubTree = _.clone(scope.data);
                 scope.selectedSubTree.children = [];
                 scope.selectedSubTree.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
 
                 scope.selectedSubTree.children = prePopulateSubTreeWithOneToOneCardinality(scope.data.children);
+            }
+
+            function renderTreeAndRegisterEvents(): void {
+                $($(element)).find("#spec-tree").jstree("destroy");
+
+                $($(element)).find("#spec-tree").jstree({ 'core' : {
+                    'data' : [
+                        scope.data
+                    ]
+                }
+                });
+
+                $($(element)).find("#spec-tree").on('select_node.jstree', setSelectedNode);
             }
 
             function prePopulateSubTreeWithOneToOneCardinality(children: data.IInstanceNode[]): data.IInstanceNode[] {
@@ -78,53 +92,14 @@ module app.directives.specificationTree {
                 return childrenToPrePopulateWith;
             }
 
-            scope.insertIntoProductCandidate = function(): void {
-                var selectedCandidateParentObjectReference: data.IInstanceNode = InstanceTreeUtilities.findNodeByNodeGuid(scope.selectedSubTree, scope.selectedCandidateParent.nodeGuid);
-                selectedSpecificationNode.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
-                selectedSpecificationNode.children = prePopulateSubTreeWithOneToOneCardinality(selectedSpecificationNode.children);
+            function setSelectedNode(event, data) {
+                var selectedNode: data.IInstanceNode = data.node.original;
+                selectedNode.children = getNodeChildren(data.instance, data.instance.get_node(data.selected[0]));
 
-                selectedCandidateParentObjectReference.children.push(selectedSpecificationNode);
-                scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
-            };
-
-            function renderTree(): void {
-                console.log(scope.data);
-                $($(element)).find("#spec-tree").jstree("destroy");
-
-                $($(element)).find("#spec-tree").jstree({ 'core' : {
-                        'data' : [
-                            scope.data
-                        ]
-                    }
+                scope.$apply(function() {
+                    selectedSpecificationNode = selectedNode;
+                    scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
                 });
-
-                $($(element)).find("#spec-tree").on('select_node.jstree', function (e, data) {
-
-                    var selectedNode: data.IInstanceNode = data.node.original;
-                    selectedNode.children = getNodeChildren(data.instance, data.instance.get_node(data.selected[0]));
-
-                    scope.$apply(function() {
-                        selectedSpecificationNode = selectedNode;
-                        scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
-                    });
-                })
-
-            }
-
-            function checkIfSelectedNodesCanBeAddedToCandidateTree(): boolean {
-                if (scope.selectedCandidateParent == null || selectedSpecificationNode == null) {
-                    return false;
-                }
-
-                var specificationParent = InstanceTreeUtilities.findNodeInTreeByGuid(scope.data, scope.selectedCandidateParent.guid);
-
-                if (InstanceTreeUtilities.isParentOfNode(specificationParent, selectedSpecificationNode)) {
-                    if (InstanceTreeUtilities.isBetweenCardinality(scope.selectedCandidateParent, selectedSpecificationNode)) {
-                        return true;
-                    }
-                }
-
-                return false;
             }
 
             function getNodeChildren(instance, node): data.IInstanceNode[] {
@@ -137,9 +112,30 @@ module app.directives.specificationTree {
                 return children;
             }
 
-            function getNodeParent(instance, node): data.IInstanceNode {
-                return instance.get_node(instance.get_parent(node));
+            function checkIfSelectedNodesCanBeAddedToCandidateTree(): boolean {
+                if (scope.selectedCandidateNode == null || selectedSpecificationNode == null) {
+                    return false;
+                }
+
+                var specificationParent = InstanceTreeUtilities.findNodeInTreeByGuid(scope.data, scope.selectedCandidateNode.guid);
+
+                if (InstanceTreeUtilities.isParentOfNode(specificationParent, selectedSpecificationNode)) {
+                    if (InstanceTreeUtilities.isBetweenCardinality(scope.selectedCandidateNode, selectedSpecificationNode)) {
+                        return true;
+                    }
+                }
+
+                return false;
             }
+
+            scope.insertIntoProductCandidate = function(): void {
+                var selectedCandidateParentObjectReference: data.IInstanceNode = InstanceTreeUtilities.findNodeByNodeGuid(scope.selectedSubTree, scope.selectedCandidateNode.nodeGuid);
+                selectedSpecificationNode.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
+                selectedSpecificationNode.children = prePopulateSubTreeWithOneToOneCardinality(selectedSpecificationNode.children);
+
+                selectedCandidateParentObjectReference.children.push(selectedSpecificationNode);
+                scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
+            };
         }
     }
 }

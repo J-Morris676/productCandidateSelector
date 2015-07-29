@@ -8,7 +8,7 @@ module app.directives.candidateTree {
 
     interface ICandidateTreeScope extends ng.IScope {
         data: data.IInstanceNode;
-        selectedNode: {};
+        selectedNode: data.IInstanceNode;
     }
 
     export class CandidateTree implements ng.IDirective {
@@ -22,19 +22,15 @@ module app.directives.candidateTree {
             if (scope.data == null) {
                 scope.$watch("data", function () {
                     if (scope.data != null) {
-                        renderTree();
+                        renderTreeAndRegisterEvents();
                     }
                 }, true)
             }
             else {
-                renderTree();
+                renderTreeAndRegisterEvents();
             }
 
-            scope.$watch("selectedNode", function() {
-                console.log("Changed Selected Node!");
-            });
-            
-            function renderTree(): void {
+            function renderTreeAndRegisterEvents(): void {
                 $(element[0]).jstree("destroy");
                 scope.selectedNode = null;
 
@@ -46,28 +42,25 @@ module app.directives.candidateTree {
                     }
                 }).on('loaded.jstree', function() {
                     $(element[0]).jstree('open_all');
-                });
-
-
-
-                $(element[0]).on('select_node.jstree', function (e, data) {
-                    var selectedNode: data.IInstanceNode = data.instance.get_node(data.selected[0]).original;
-                    selectedNode.children = getNodeChildren(data.instance, data.instance.get_node(data.selected[0]));
-
-                    scope.$apply(function() {
-                        scope.selectedNode = selectedNode;
-                    });
-                });
-
-                function getNodeChildren(instance, node): data.IInstanceNode[] {
-                    var children: data.IInstanceNode[] = [];
-                    for (var childIndex = 0; childIndex < node.children.length; childIndex++) {
-                        children.push(instance.get_node(node.children[childIndex]).original);
-                    }
-                    return children;
-                }
+                }).on('select_node.jstree', setSelectedNode);
             }
 
+            function setSelectedNode(event, data) {
+                var selectedNode: data.IInstanceNode = data.instance.get_node(data.selected[0]).original;
+                selectedNode.children = getNodeChildren(data.instance, data.instance.get_node(data.selected[0]));
+
+                scope.$apply(function() {
+                    scope.selectedNode = selectedNode;
+                });
+            }
+
+            function getNodeChildren(instance, node): data.IInstanceNode[] {
+                var children: data.IInstanceNode[] = [];
+                for (var childIndex = 0; childIndex < node.children.length; childIndex++) {
+                    children.push(instance.get_node(node.children[childIndex]).original);
+                }
+                return children;
+            }
         }
     }
 }

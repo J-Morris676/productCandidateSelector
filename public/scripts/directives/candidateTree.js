@@ -21,17 +21,14 @@ var app;
                     if (scope.data == null) {
                         scope.$watch("data", function () {
                             if (scope.data != null) {
-                                renderTree();
+                                renderTreeAndRegisterEvents();
                             }
                         }, true);
                     }
                     else {
-                        renderTree();
+                        renderTreeAndRegisterEvents();
                     }
-                    scope.$watch("selectedNode", function () {
-                        console.log("Changed Selected Node!");
-                    });
-                    function renderTree() {
+                    function renderTreeAndRegisterEvents() {
                         $(element[0]).jstree("destroy");
                         scope.selectedNode = null;
                         $(element[0]).jstree({ 'core': {
@@ -41,21 +38,21 @@ var app;
                             ]
                         } }).on('loaded.jstree', function () {
                             $(element[0]).jstree('open_all');
+                        }).on('select_node.jstree', setSelectedNode);
+                    }
+                    function setSelectedNode(event, data) {
+                        var selectedNode = data.instance.get_node(data.selected[0]).original;
+                        selectedNode.children = getNodeChildren(data.instance, data.instance.get_node(data.selected[0]));
+                        scope.$apply(function () {
+                            scope.selectedNode = selectedNode;
                         });
-                        $(element[0]).on('select_node.jstree', function (e, data) {
-                            var selectedNode = data.instance.get_node(data.selected[0]).original;
-                            selectedNode.children = getNodeChildren(data.instance, data.instance.get_node(data.selected[0]));
-                            scope.$apply(function () {
-                                scope.selectedNode = selectedNode;
-                            });
-                        });
-                        function getNodeChildren(instance, node) {
-                            var children = [];
-                            for (var childIndex = 0; childIndex < node.children.length; childIndex++) {
-                                children.push(instance.get_node(node.children[childIndex]).original);
-                            }
-                            return children;
+                    }
+                    function getNodeChildren(instance, node) {
+                        var children = [];
+                        for (var childIndex = 0; childIndex < node.children.length; childIndex++) {
+                            children.push(instance.get_node(node.children[childIndex]).original);
                         }
+                        return children;
                     }
                 };
                 return CandidateTree;
