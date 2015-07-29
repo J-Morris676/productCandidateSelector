@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html data-ng-app="app" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="bower_components/jstree/dist/themes/default/style.min.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body style="background-color:#048bcc">
+        <div data-ng-controller="selectController" id="message-panel" >
+            <div class="row">
+                <div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10 col-lg-offset-1 col-lg-10">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <div class="row">
+                                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                                    <select ng-change="events.updateNameDropDown()" ng-init="elementKindGuid=null" data-ng-model="elementKindGuid" class="form-control">
+                                        <option value="null">
+                                            -Select Element Kind-
+                                        </option>
+                                        <option data-ng-repeat="elementKind in  elementKinds | orderBy:'value'" value="{{$index}}">
+                                            {{elementKind.value}}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div data-ng-hide="elementKindGuid == null" class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                                    <select data-ng-model="elementNameAndGuid" class="form-control" data-ng-options="elementName.value for elementName in elementNames  | orderBy:'value'">
+                                        <option value="">-Select Name-</option>
+                                    </select>
+                                </div>
+
+                                <div data-ng-hide="elementKindGuid == null" class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                    <button data-ng-click="events.drawGraph();" class="btn">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div ng-show="specificationTree" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                <div class="well">
+                                    <specification-tree selected-candidate-parent="selectedCandidateNode" selected-sub-tree="candidateTree" data="specificationTree"></specification-tree>
+                                </div>
+                            </div>
+
+                            <div ng-show="candidateTree" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                <div style="max-width: 700px; overflow-x:auto;max-height: 500px;overflow-y:auto; " class="well">
+                                    <div class="row">
+                                        <h4>Candidate Tree</h4>
+                                        <candidate-tree selected-node="selectedCandidateNode" data="candidateTree"></candidate-tree>
+                                    </div>
+                                    <div ng-show="selectedCandidateNode" style="margin-top:10px;" class="row">
+                                        <div class="col-xs-offset-10 col-xs-2 col-sm-offset-8 col-sm-4 col-md-offset-8 col-md-4 col-lg-offset-8 col-lg-4">
+                                            <form class="form-inline">
+                                                <div class="form-group">
+                                                    <button ng-click="events.removeNodeFromCandidateTree()" class="btn btn-danger">Remove</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="bower_components/angular/angular.min.js"></script>
+        <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+
+        <script src="bower_components/d3/d3.min.js"></script>
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/jstree/dist/jstree.min.js"></script>
+        <script src="bower_components/underscore/underscore-min.js"></script>
+
+
+        <script src="scripts/app.js"></script>
+
+        <script src="scripts/interfaces/data.js"></script>
+        <script src="scripts/modules/InstanceTreeUtilities.js"></script>
+
+        <script src="scripts/services/apiServices.js"></script>
+
+        <script src="scripts/filters/selectFilters.js"></script>
+        <script src="scripts/controllers/selectController.js"></script>
+        <script src="scripts/directives/specificationTree/specificationTree.js"></script>
+        <script src="scripts/directives/candidateTree.js"></script>
+    </body>
+</html>
