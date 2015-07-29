@@ -54,20 +54,8 @@
                             </div>
 
                             <div ng-show="candidateTree" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                <div style="max-width: 700px; overflow-x:auto;max-height: 500px;overflow-y:auto; " class="well">
-                                    <div class="row">
-                                        <h4>Candidate Tree</h4>
-                                        <candidate-tree selected-node="selectedCandidateNode" data="candidateTree"></candidate-tree>
-                                    </div>
-                                    <div ng-show="selectedCandidateNode" style="margin-top:10px;" class="row">
-                                        <div class="col-xs-offset-10 col-xs-2 col-sm-offset-8 col-sm-4 col-md-offset-8 col-md-4 col-lg-offset-8 col-lg-4">
-                                            <form class="form-inline">
-                                                <div class="form-group">
-                                                    <button ng-click="events.removeNodeFromCandidateTree()" class="btn btn-danger">Remove</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
+                                <div class="well">
+                                    <candidate-tree selected-node="selectedCandidateNode" data="candidateTree"></candidate-tree>
                                 </div>
                             </div>
                         </div>
@@ -94,6 +82,6 @@
         <script src="scripts/filters/selectFilters.js"></script>
         <script src="scripts/controllers/selectController.js"></script>
         <script src="scripts/directives/specificationTree/specificationTree.js"></script>
-        <script src="scripts/directives/candidateTree.js"></script>
+        <script src="scripts/directives/candidateTree/candidateTree.js"></script>
     </body>
 </html>

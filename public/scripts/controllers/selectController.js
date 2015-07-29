@@ -16,7 +16,6 @@ var app;
                 this.assignInstancesResponse = function (instances) {
                     _this.$scope.instances = instances;
                     _this.$scope.elementKinds = _this.$filter('elementKindUniqueFilter')(_this.$scope.instances);
-                    console.log(_this.$scope.elementKinds);
                 };
                 this.assignRelationshipsResponse = function (relationships) {
                     _this.$scope.relationships = relationships;
@@ -81,15 +80,6 @@ var app;
                     return true;
                 }
                 return false;
-            };
-            selectController.prototype.removeNodeFromCandidateTree = function () {
-                for (var childIndex = 0; childIndex < this.$scope.candidateTree.children.length; childIndex++) {
-                    if (this.$scope.selectedCandidateNode.guid == this.$scope.candidateTree.children[childIndex].guid) {
-                        this.$scope.candidateTree.children.splice(childIndex, 1);
-                        this.$scope.selectedCandidateNode = null;
-                        return;
-                    }
-                }
             };
             return selectController;
         })();

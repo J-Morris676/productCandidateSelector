@@ -57,7 +57,6 @@ module app.controllers {
         {
             this.$scope.instances = instances;
             this.$scope.elementKinds = this.$filter('elementKindUniqueFilter')(this.$scope.instances);
-            console.log(this.$scope.elementKinds)
         };
 
         assignRelationshipsResponse = (relationships: data.IRelationships): void =>
@@ -139,16 +138,6 @@ module app.controllers {
                 return true
             }
             return false;
-        }
-
-        removeNodeFromCandidateTree(): void {
-            for (var childIndex = 0; childIndex < this.$scope.candidateTree.children.length; childIndex++) {
-                if (this.$scope.selectedCandidateNode.guid == this.$scope.candidateTree.children[childIndex].guid) {
-                    this.$scope.candidateTree.children.splice(childIndex, 1);
-                    this.$scope.selectedCandidateNode = null;
-                    return;
-                }
-            }
         }
     }
 }

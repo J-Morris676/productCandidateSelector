@@ -18,7 +18,7 @@
       <root url="file://$PROJECT_DIR$/public/lib/underscore/underscore-min.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/directives/verticalTreeDirective.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/directives/dataSelectDirective/dataSelectDirective.js" />
-      <root url="file://$PROJECT_DIR$/public/scripts/directives/candidateTree.js" />
+      <root url="file://$PROJECT_DIR$/public/scripts/directives/candidateTree/candidateTree.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/directives/specificationTree/specificationTree.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/modules/InstanceTreeUtilities.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/filters/selectFilters.js" />

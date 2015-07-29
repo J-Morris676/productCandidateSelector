@@ -110,7 +110,4 @@ module InstanceTreeUtilities {
 
         return childrenAmountWithGivenGuid;
     }
-
-
-
 }

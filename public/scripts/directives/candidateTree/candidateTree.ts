@@ -1,7 +1,8 @@
-/// <reference path="../../typings/angular/angular.d.ts" />
-/// <reference path="../../typings/jstree/jstree.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../interfaces/data.ts" />
+/// <reference path="../../../typings/angular/angular.d.ts" />
+/// <reference path="../../../typings/jstree/jstree.d.ts" />
+/// <reference path="../../../typings/jquery/jquery.d.ts" />
+
+/// <reference path="../../interfaces/data.ts" />
 
 module app.directives.candidateTree {
     'use strict';
@@ -17,6 +18,7 @@ module app.directives.candidateTree {
             data: "=",
             selectedNode: "=?"
         };
+        public templateUrl = "scripts/directives/candidateTree/candidateTree.html";
 
         public link(scope:ICandidateTreeScope, element:EventTarget, attributes:ng.IAttributes) {
             if (scope.data == null) {
@@ -31,17 +33,17 @@ module app.directives.candidateTree {
             }
 
             function renderTreeAndRegisterEvents(): void {
-                $(element[0]).jstree("destroy");
+                $($(element)).find("#candidate-tree").jstree("destroy");
                 scope.selectedNode = null;
 
-                $(element[0]).jstree({ 'core' : {
+                $($(element)).find("#candidate-tree").jstree({ 'core' : {
                         'multiple': false,
                         'data' : [
                             scope.data
                         ]
                     }
                 }).on('loaded.jstree', function() {
-                    $(element[0]).jstree('open_all');
+                    $($(element)).find("#candidate-tree").jstree('open_all');
                 }).on('select_node.jstree', setSelectedNode);
             }
 

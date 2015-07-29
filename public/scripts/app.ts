@@ -4,7 +4,7 @@
 /// <reference path="filters/selectFilters.ts" />
 /// <reference path="controllers/selectController.ts" />
 /// <reference path="directives/specificationTree/specificationTree.ts" />
-/// <reference path="directives/candidateTree.ts" />
+/// <reference path="directives/candidateTree/candidateTree.ts" />
 
 var appModule = angular.module("app", ['ngResource']);
 
