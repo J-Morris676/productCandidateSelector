@@ -3,7 +3,7 @@
 /// <reference path="filters/selectFilters.ts" />
 /// <reference path="controllers/selectController.ts" />
 /// <reference path="directives/specificationTree/specificationTree.ts" />
-/// <reference path="directives/candidateTree.ts" />
+/// <reference path="directives/candidateTree/candidateTree.ts" />
 var appModule = angular.module("app", ['ngResource']);
 appModule.service("instancesService", ["$http", "$q", function ($http, $q) { return new app.services.InstancesService($http, $q); }]);
 appModule.service("relationshipsService", ["$http", "$q", function ($http, $q) { return new app.services.RelationshipsService($http, $q); }]);
