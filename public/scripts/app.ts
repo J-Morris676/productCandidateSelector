@@ -14,6 +14,9 @@ appModule.service("instancesService", [ "$http", "$q", ($http, $q)
 appModule.service("relationshipsService", [ "$http", "$q", ($http, $q)
     => new app.services.RelationshipsService($http, $q) ]);
 
+appModule.service("exportService", [ "$http", "$q", ($http, $q)
+    => new app.services.exportService($http, $q) ]);
+
 appModule.filter("elementKindUniqueFilter", ()
     => app.filters.elementKindUniqueFilter());
 
@@ -29,5 +32,5 @@ appModule.controller("selectController",
 appModule.directive("specificationTree", ()
     => new app.directives.specificationTree.specificationTree());
 
-appModule.directive("candidateTree", ()
-    => new app.directives.candidateTree.CandidateTree());
+appModule.directive("candidateTree", (exportService: any)
+    => new app.directives.candidateTree.CandidateTree(exportService));

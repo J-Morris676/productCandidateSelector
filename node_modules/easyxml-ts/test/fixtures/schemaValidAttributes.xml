@@ -1,0 +1,27 @@
+<response>
+    <allAttributes description="All included" id="1234" name="Everything" path="starting/from/here" ref="http://wherever">
+        <many>
+            <many>
+                <one id="1">Uno</one>
+            </many>
+            <many>
+                <two id="2">Dos</two>
+            </many>
+        </many>
+    </allAttributes>
+    <limitedAttributes id="1234" name="Something" path="starting/from/there">
+        <many>
+            <many>
+                <one id="1">Uno</one>
+            </many>
+            <many>
+                <two id="2">Dos</two>
+            </many>
+        </many>
+        <single>
+            <single>
+                <three id="3">Tres</three>
+            </single>
+        </single>
+    </limitedAttributes>
+</response>

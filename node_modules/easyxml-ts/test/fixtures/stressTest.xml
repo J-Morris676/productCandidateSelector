@@ -1,0 +1,87 @@
+<response id="bd2afd9d-9c27-4139-b121-32d17f21fa0a">
+    <Meta>
+        <Metum>
+            <Name>ElementKind</Name>
+            <Value>Component</Value>
+        </Metum>
+        <Metum>
+            <Name>ElementHierarcy</Name>
+            <Value>Mobile_Phone_Template/Component/Product/Launch_Entity</Value>
+        </Metum>
+    </Meta>
+    <Data>
+        <Datum>
+            <Name>Effective_Start_Date</Name>
+            <SchemaElementGuid>6a8f5317-a052-4e0f-9935-890bb72c94b1</SchemaElementGuid>
+            <Value>2012-11-14T00:00:00</Value>
+            <Type>Date</Type>
+        </Datum>
+        <Datum>
+            <Name>Available_Start_Date</Name>
+            <SchemaElementGuid>34188419-83c9-48b0-9380-ad31dfad4c66</SchemaElementGuid>
+            <Value>2012-11-14T00:00:00</Value>
+            <Type>Date</Type>
+        </Datum>
+        <Datum>
+            <Name>Effective_End_Date</Name>
+            <SchemaElementGuid>480de197-6399-4ac5-87b8-d3c12b490898</SchemaElementGuid>
+            <Value />
+            <Type>Date</Type>
+        </Datum>
+        <Datum>
+            <Name>Available_End_Date</Name>
+            <SchemaElementGuid>487a6f01-356f-438f-bc52-d63f94f5e8c7</SchemaElementGuid>
+            <Value />
+            <Type>Date</Type>
+        </Datum>
+        <Datum>
+            <Name>Element_Guid</Name>
+            <SchemaElementGuid>5409b4e8-4ecb-45dc-9ec3-62289b7d9ade</SchemaElementGuid>
+            <Value>bd2afd9d-9c27-4139-b121-32d17f21fa0a</Value>
+            <Type>String</Type>
+        </Datum>
+        <Datum>
+            <Name>Element_Type_Guid</Name>
+            <SchemaElementGuid>556a6277-8514-4161-9d26-6654b354f015</SchemaElementGuid>
+            <Value>5ce36cb9-d119-45aa-a3aa-1b22b07d7404</Value>
+            <Type>String</Type>
+        </Datum>
+        <Datum>
+            <Name>Business_ID</Name>
+            <SchemaElementGuid>f14ff8a9-ee86-4165-8dd0-11818171da60</SchemaElementGuid>
+            <Value>Prefix00000036Suffix</Value>
+            <Type>String</Type>
+        </Datum>
+        <Datum>
+            <Name>Name</Name>
+            <SchemaElementGuid>6f95e753-c674-4e01-ad10-48e6ab546be2</SchemaElementGuid>
+            <Value>50030 Child A</Value>
+            <Type>String</Type>
+        </Datum>
+        <Datum>
+            <Name>Description</Name>
+            <SchemaElementGuid>b1ce5e56-44ad-40ca-a325-3232fdb13a90</SchemaElementGuid>
+            <Value>50030 Child A</Value>
+            <Type>String</Type>
+        </Datum>
+        <Datum>
+            <Name>Category_ID</Name>
+            <SchemaElementGuid>ef6af0ad-ff06-4756-a520-a061774ede77</SchemaElementGuid>
+            <Value>8</Value>
+            <Type>Int</Type>
+        </Datum>
+        <Datum>
+            <Name>Max_Cust_Portfolio_Instances</Name>
+            <SchemaElementGuid>479aac87-f939-4b49-83a1-f20ec55da2ae</SchemaElementGuid>
+            <Value />
+            <Type>Int</Type>
+        </Datum>
+        <Datum>
+            <Name>Min_Cust_Portfolio_Instances</Name>
+            <SchemaElementGuid>26382b91-836d-49aa-9a84-c3f50530a328</SchemaElementGuid>
+            <Value />
+            <Type>Int</Type>
+        </Datum>
+    </Data>
+    <Guid>bd2afd9d-9c27-4139-b121-32d17f21fa0a</Guid>
+</response>

@@ -32,6 +32,22 @@ var app;
             return RelationshipsService;
         })();
         services.RelationshipsService = RelationshipsService;
+        var exportService = (function () {
+            function exportService($http, $q) {
+                var _this = this;
+                this.postCandidate = function (candidate) {
+                    return _this.$http.post("/api/candidateTrees", candidate);
+                };
+                this.downloadCandidateFile = function (candidateId, format) {
+                    var downloadFrame = document.getElementById('download-frame');
+                    downloadFrame.setAttribute("src", "/api/candidateTrees/" + candidateId + "?format=" + format);
+                };
+                this.$http = $http;
+                this.$q = $q;
+            }
+            return exportService;
+        })();
+        services.exportService = exportService;
     })(services = app.services || (app.services = {}));
 })(app || (app = {}));
 //# sourceMappingURL=apiServices.js.map

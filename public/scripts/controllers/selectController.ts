@@ -72,25 +72,27 @@ module app.controllers {
         drawGraph = (): void =>
         {
             this.$scope.specificationTree = this.generateSpecificationTreeData(this.$scope.elementNameAndGuid["guid"]);
+            console.log(this.$scope.specificationTree);
         };
 
         generateSpecificationTreeData = (guid: string): data.IInstanceNode =>
         {
             var relationships: data.IRelationships = this.$scope.relationships;
+            var instance: data.IInstance = this.$scope.instances[guid];
             var children: data.IRelationship[] = relationships[guid] || [];
 
             var node: data.IInstanceNode = {
-                type: this.$scope.instances[guid].Meta[0].Value,
+                type: instance.Meta[0].Value,
                 name: null,
-                text: this.$scope.instances[guid].Meta[0].Value,
+                text: instance.Meta[0].Value,
                 guid: guid,
                 children: Array<data.IInstanceNode>(),
                 cardinality: null
             };
 
-            if (this.$scope.instances[guid].Meta[1].Value.indexOf("Launch_Entity") != -1) {
-                node.name = this.$scope.instances[guid].Data[7].Value;
-                node.text = node.text + " - " + this.$scope.instances[guid].Data[7].Value;
+            if (instance.Meta[1].Value.indexOf("Launch_Entity") != -1) {
+                node.name = instance.Data[7].Value;
+                node.text = node.text + " - " + instance.Data[7].Value;
             }
 
             for (var childIndex = 0; childIndex < children.length; childIndex++) {
@@ -99,8 +101,6 @@ module app.controllers {
                 var childExplicitType:string = this.findHierarchyType(childHierarchyPath);
 
                 if (childExplicitType  == "Relation_Entity") {
-
-
                     if (this.isInDate(new Date(child.Data[0].Value), new Date(child.Data[1].Value))) {
                         var grandchildGuid: string = relationships[children[childIndex].Child][0].Child;
                         var grandchild: data.IInstanceNode = this.generateSpecificationTreeData(grandchildGuid);
@@ -113,9 +113,9 @@ module app.controllers {
                         node.children.push(grandchild);
                     }
                 }
-                /*else {
+                else {
                     node.children.push(this.generateSpecificationTreeData(children[childIndex].Child));
-                }*/
+                }
 
             }
 

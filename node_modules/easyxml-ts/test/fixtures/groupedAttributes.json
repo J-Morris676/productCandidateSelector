@@ -1,0 +1,8 @@
+{
+    "ElementData":"I am an element",
+    "_attrs" : {
+        "Attr1":"attribute one",
+        "Attr2":"attribute two"
+    }
+}
+

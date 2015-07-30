@@ -25,21 +25,23 @@ var app;
                 };
                 this.drawGraph = function () {
                     _this.$scope.specificationTree = _this.generateSpecificationTreeData(_this.$scope.elementNameAndGuid["guid"]);
+                    console.log(_this.$scope.specificationTree);
                 };
                 this.generateSpecificationTreeData = function (guid) {
                     var relationships = _this.$scope.relationships;
+                    var instance = _this.$scope.instances[guid];
                     var children = relationships[guid] || [];
                     var node = {
-                        type: _this.$scope.instances[guid].Meta[0].Value,
+                        type: instance.Meta[0].Value,
                         name: null,
-                        text: _this.$scope.instances[guid].Meta[0].Value,
+                        text: instance.Meta[0].Value,
                         guid: guid,
                         children: Array(),
                         cardinality: null
                     };
-                    if (_this.$scope.instances[guid].Meta[1].Value.indexOf("Launch_Entity") != -1) {
-                        node.name = _this.$scope.instances[guid].Data[7].Value;
-                        node.text = node.text + " - " + _this.$scope.instances[guid].Data[7].Value;
+                    if (instance.Meta[1].Value.indexOf("Launch_Entity") != -1) {
+                        node.name = instance.Data[7].Value;
+                        node.text = node.text + " - " + instance.Data[7].Value;
                     }
                     for (var childIndex = 0; childIndex < children.length; childIndex++) {
                         var child = _this.$scope.instances[children[childIndex].Child];
@@ -56,6 +58,9 @@ var app;
                                 grandchild.text = grandchild.text + " (" + grandchild.cardinality["min"] + ":" + grandchild.cardinality["max"] + ")";
                                 node.children.push(grandchild);
                             }
+                        }
+                        else {
+                            node.children.push(_this.generateSpecificationTreeData(children[childIndex].Child));
                         }
                     }
                     return node;

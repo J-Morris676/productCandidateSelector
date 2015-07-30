@@ -1,0 +1,3 @@
+<response Attr1="attribute one" Attr2="attribute two">
+    <ElementData>I am an element</ElementData>
+</response>

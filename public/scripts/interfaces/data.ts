@@ -44,4 +44,11 @@ module data {
             max: string;
         }
     }
+
+    export interface ICandidateExportNode {
+        _IsNewForCustomer: boolean;
+        ID: string;
+        EntityId: string;
+        ChildEntity: ICandidateExportNode;
+    }
 }

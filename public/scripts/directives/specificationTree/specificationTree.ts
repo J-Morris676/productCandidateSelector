@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/angular/angular.d.ts" />
 /// <reference path="../../../typings/jstree/jstree.d.ts" />
 /// <reference path="../../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../../typings/underscore/underscore.d.ts" />
+/// <reference path="../../../typings/lodash/lodash.d.ts" />
 
 /// <reference path="../../interfaces/data.ts" />
 /// <reference path="../../modules/InstanceTreeUtilities.ts" />
@@ -35,7 +35,6 @@ module app.directives.specificationTree {
         public link(scope:ISpecificationTreeScope, element:EventTarget, attributes:ng.IAttributes) {
             var selectedSpecificationNode: data.IInstanceNode = null;
             scope.canBeAddedToProductCandidate = false;
-
 
             scope.$watch("selectedCandidateNode", function() {
                 scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
@@ -130,10 +129,11 @@ module app.directives.specificationTree {
 
             scope.insertIntoProductCandidate = function(): void {
                 var selectedCandidateParentObjectReference: data.IInstanceNode = InstanceTreeUtilities.findNodeByNodeGuid(scope.selectedSubTree, scope.selectedCandidateNode.nodeGuid);
-                selectedSpecificationNode.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
-                selectedSpecificationNode.children = prePopulateSubTreeWithOneToOneCardinality(selectedSpecificationNode.children);
+                var newNode: data.IInstanceNode = _.clone(selectedSpecificationNode, true);
+                newNode.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
+                newNode.children = prePopulateSubTreeWithOneToOneCardinality(newNode.children);
 
-                selectedCandidateParentObjectReference.children.push(selectedSpecificationNode);
+                selectedCandidateParentObjectReference.children.push(newNode);
                 scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
             };
         }

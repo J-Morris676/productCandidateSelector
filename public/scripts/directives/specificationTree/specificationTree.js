@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/angular/angular.d.ts" />
 /// <reference path="../../../typings/jstree/jstree.d.ts" />
 /// <reference path="../../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../../typings/underscore/underscore.d.ts" />
+/// <reference path="../../../typings/lodash/lodash.d.ts" />
 /// <reference path="../../interfaces/data.ts" />
 /// <reference path="../../modules/InstanceTreeUtilities.ts" />
 var app;
@@ -100,9 +100,10 @@ var app;
                     }
                     scope.insertIntoProductCandidate = function () {
                         var selectedCandidateParentObjectReference = InstanceTreeUtilities.findNodeByNodeGuid(scope.selectedSubTree, scope.selectedCandidateNode.nodeGuid);
-                        selectedSpecificationNode.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
-                        selectedSpecificationNode.children = prePopulateSubTreeWithOneToOneCardinality(selectedSpecificationNode.children);
-                        selectedCandidateParentObjectReference.children.push(selectedSpecificationNode);
+                        var newNode = _.clone(selectedSpecificationNode, true);
+                        newNode.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
+                        newNode.children = prePopulateSubTreeWithOneToOneCardinality(newNode.children);
+                        selectedCandidateParentObjectReference.children.push(newNode);
                         scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
                     };
                 };

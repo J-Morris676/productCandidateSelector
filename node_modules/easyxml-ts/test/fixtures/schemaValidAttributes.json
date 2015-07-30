@@ -1,0 +1,32 @@
+{
+    "allAttributes": {
+        "many": [
+            {"one":{"_id":1, "_":"Uno"}},
+            {"two":{"_id":2, "_":"Dos"}}
+        ],
+        "_attrs": {
+            "description": "All included",
+            "id": "1234",
+            "name": "Everything"
+        },
+        "_path": "starting/from/here",
+        "_ref": "http://wherever"
+    },
+
+    "limitedAttributes": {
+        "single": [
+            {"three":{"_id":3, "_":"Tres"}}
+        ],
+        "many": [
+            {"one":{"_id":1, "_":"Uno"}},
+            {"two":{"_id":2, "_":"Dos"}}
+        ],
+        "_attrs": {
+            "description": "Abridged",
+            "id": "1234",
+            "name": "Something"
+        },
+        "_path": "starting/from/there",
+        "_ref": "http://wherever"
+    }
+}

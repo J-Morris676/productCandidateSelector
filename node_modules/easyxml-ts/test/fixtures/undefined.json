@@ -1,0 +1,5 @@
+{
+  "boolz": true,
+  "undefinedz": "undefined-will-be-changed-in-test-setup"
+}
+

@@ -2,9 +2,9 @@
   <library name="Generated files" type="javaScript">
     <properties>
       <sourceFilesUrls>
-        <item url="file://$PROJECT_DIR$/public/scripts/directives/candidateTree.js" />
-        <item url="file://$PROJECT_DIR$/public/scripts/directives/specificationTree/specificationTree.js" />
+        <item url="file://$PROJECT_DIR$/public/scripts/directives/candidateTree/candidateTree.js" />
         <item url="file://$PROJECT_DIR$/public/scripts/modules/InstanceTreeUtilities.js" />
+        <item url="file://$PROJECT_DIR$/public/scripts/directives/specificationTree/specificationTree.js" />
         <item url="file://$PROJECT_DIR$/public/scripts/filters/selectFilters.js" />
         <item url="file://$PROJECT_DIR$/app.js" />
         <item url="file://$PROJECT_DIR$/public/scripts/interfaces/data.js" />
@@ -19,8 +19,8 @@
       <root url="file://$PROJECT_DIR$/public/scripts/directives/verticalTreeDirective.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/directives/dataSelectDirective/dataSelectDirective.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/directives/candidateTree/candidateTree.js" />
-      <root url="file://$PROJECT_DIR$/public/scripts/directives/specificationTree/specificationTree.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/modules/InstanceTreeUtilities.js" />
+      <root url="file://$PROJECT_DIR$/public/scripts/directives/specificationTree/specificationTree.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/filters/selectFilters.js" />
       <root url="file://$PROJECT_DIR$/app.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/interfaces/data.js" />
