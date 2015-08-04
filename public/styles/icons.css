@@ -1,0 +1,65 @@
+.udc-leaf {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: lightgray;
+}
+.udc-leaf:before {
+  content: "\e111";
+}
+.udc-leaf-parent {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: lightgray;
+}
+.udc-leaf-parent:before {
+  content: "\e065";
+}
+.characteristic-leaf-unselected {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  background-image: url("../bower_components/jstree/dist/themes/default/32px.png") !important;
+  background-position: -164px -4px !important;
+}
+.characteristic-leaf-selected {
+  display: inline-block;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+  text-align: center;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  background-image: url("../bower_components/jstree/dist/themes/default/32px.png") !important;
+  background-position: -228px -4px !important;
+}
+.characteristic-leaf-parent {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: lightgray;
+}
+.characteristic-leaf-parent:before {
+  content: "\e067";
+}

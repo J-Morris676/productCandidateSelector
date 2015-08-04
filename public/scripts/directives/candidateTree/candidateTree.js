@@ -25,8 +25,7 @@ var app;
                     this.templateUrl = "scripts/directives/candidateTree/candidateTree.html";
                     this.link = function (scope, element, attributes) {
                         var self = _this;
-                        var BOXICON = "background-position:-164px -4px";
-                        var TICKICON = "background-position:-228px -4px";
+                        var jsTree;
                         var candidateTreeElement = $(element).find("#candidate-tree");
                         if (scope.data == null) {
                             addDataWatcher();
@@ -58,12 +57,6 @@ var app;
                             scope.dataWithCharacteristicSelections = _.clone(scope.data, true);
                             scope.selectedNode = null;
                             candidateTreeElement.jstree("destroy");
-                            candidateTreeElement.bind("open_node.jstree", function (event) {
-                                candidateTreeElement.find(".jstree-leaf").each(function () {
-                                    initCharacteristicNode($(this).closest("li"));
-                                    initCharacteristicParentNode($(this).closest("li"));
-                                });
-                            });
                             candidateTreeElement.jstree({ 'core': {
                                 'multiple': false,
                                 'data': [
@@ -71,10 +64,18 @@ var app;
                                 ]
                             } }).on('loaded.jstree', function () {
                                 candidateTreeElement.jstree('open_all');
+                                candidateTreeElement.find(".jstree-leaf").each(function () {
+                                    initCharacteristicNode($(this).closest("li"));
+                                    initCharacteristicParentNode($(this).closest("li"));
+                                    initUDCNode($(this).closest("li"));
+                                    initUDCParentNode($(this).closest("li"));
+                                });
                             }).on('select_node.jstree', function (event, data) {
                                 setSelectedNode(event, data);
                                 toggleSelectedCharacteristic($(data.event.target).closest("li"));
+                                promptForUDCInput($(data.event.target).closest("li"));
                             });
+                            jsTree = candidateTreeElement.jstree(true);
                         }
                         function setSelectedNode(event, treeData) {
                             var selectedNode = treeData.instance.get_node(treeData.selected[0]).original;
@@ -84,51 +85,65 @@ var app;
                             });
                         }
                         function initCharacteristicNode(node) {
-                            var jsTree = candidateTreeElement.jstree(true);
                             var nodeData = jsTree.get_node(node[0]).original;
-                            var style;
-                            if (!nodeData.checked) {
-                                style = BOXICON;
-                            }
-                            else {
-                                style = TICKICON;
-                            }
+                            var selectedNodeInCharTree = InstanceTreeUtilities.findNodeByNodeGuid(scope.dataWithCharacteristicSelections, nodeData.nodeGuid);
                             if (InstanceTreeUtilities.isSelectableCharacteristicNode(nodeData)) {
-                                var icon = node.find("a i");
-                                icon.attr("style", style);
+                                if (!selectedNodeInCharTree.checked) {
+                                    jsTree.set_icon(node, "characteristic-leaf-unselected");
+                                }
+                                else {
+                                    jsTree.set_icon(node, "characteristic-leaf-selected");
+                                }
                             }
                         }
                         function initCharacteristicParentNode(node) {
-                            var jsTree = candidateTreeElement.jstree(true);
                             var nodeData = jsTree.get_node(node[0]).original;
                             var parentNodeData = InstanceTreeUtilities.findParent(scope.dataWithCharacteristicSelections, nodeData);
                             if (InstanceTreeUtilities.isCharacteristicUseNode(parentNodeData)) {
                                 var nodeParentNearestListItemId = candidateTreeElement.jstree(true).get_parent(node[0]);
                                 var nodeParentNearestListItem = $("#" + nodeParentNearestListItemId);
-                                var icon = nodeParentNearestListItem.children("a").children("i");
-                                icon.attr("class", "glyphicon glyphicon-edit");
-                                icon.attr("style", "margin-right:3px;color:darkgray");
-                                icon.attr("title", "Characteristic Use");
+                                jsTree.set_icon(nodeParentNearestListItem, "characteristic-leaf-parent");
+                            }
+                        }
+                        function initUDCNode(node) {
+                            var nodeData = jsTree.get_node(node[0]).original;
+                            if (InstanceTreeUtilities.isSelectableUDCNode(nodeData)) {
+                                jsTree.set_icon(node, "udc-leaf");
+                            }
+                        }
+                        function initUDCParentNode(node) {
+                            var nodeData = jsTree.get_node(node[0]).original;
+                            var parentNodeData = InstanceTreeUtilities.findParent(scope.dataWithCharacteristicSelections, nodeData);
+                            if (InstanceTreeUtilities.isUDCNode(parentNodeData)) {
+                                var nodeParentNearestListItemId = candidateTreeElement.jstree(true).get_parent(node[0]);
+                                var nodeParentNearestListItem = $("#" + nodeParentNearestListItemId);
+                                jsTree.set_icon(nodeParentNearestListItem, "udc-leaf-parent");
                             }
                         }
                         function toggleSelectedCharacteristic(node) {
-                            var jsTree = candidateTreeElement.jstree(true);
                             var selectedNodeData = jsTree.get_node(node[0]).original;
                             if (InstanceTreeUtilities.isSelectableCharacteristicNode(selectedNodeData)) {
-                                var icon = node.find("a i");
                                 var selectedNodeInCharTree = InstanceTreeUtilities.findNodeByNodeGuid(scope.dataWithCharacteristicSelections, selectedNodeData.nodeGuid);
                                 var selectedNodeParentInCharTree = InstanceTreeUtilities.findParent(scope.dataWithCharacteristicSelections, selectedNodeData);
                                 if (selectedNodeInCharTree.checked != null && selectedNodeInCharTree.checked == true) {
-                                    icon.attr("style", BOXICON);
+                                    jsTree.set_icon(node, "characteristic-leaf-unselected");
                                     selectedNodeInCharTree.checked = false;
                                 }
                                 else {
                                     if (InstanceTreeUtilities.canAddCharacteristic(selectedNodeParentInCharTree)) {
-                                        icon.attr("style", TICKICON);
+                                        jsTree.set_icon(node, "characteristic-leaf-selected");
                                         selectedNodeInCharTree.checked = true;
                                     }
                                 }
-                                console.log(scope.dataWithCharacteristicSelections);
+                            }
+                        }
+                        function promptForUDCInput(node) {
+                            var selectedNodeData = jsTree.get_node(node[0]).original;
+                            if (InstanceTreeUtilities.isSelectableUDCNode(selectedNodeData)) {
+                                var selectedNodeInCharTree = InstanceTreeUtilities.findNodeByNodeGuid(scope.dataWithCharacteristicSelections, selectedNodeData.nodeGuid);
+                                var currentValue = selectedNodeInCharTree.value || "";
+                                var newValue = prompt("Enter User Defined Characteristic:", currentValue);
+                                selectedNodeInCharTree.value = newValue || currentValue;
                             }
                         }
                         function getJsTreeNodeChildren(instance, node) {
@@ -155,7 +170,34 @@ var app;
                             }
                         };
                         function generateTransformedTreeForExport(treeNode, parentNode) {
-                            if (InstanceTreeUtilities.isCharacteristicNode(treeNode)) {
+                            if (InstanceTreeUtilities.isUDCNode(treeNode)) {
+                                if (treeNode.children[0].value == null) {
+                                    throw new Error("Error: UDC '" + treeNode.text + "' has not been set a value\n");
+                                }
+                                else {
+                                    var useArea = "";
+                                    var specCharRelationships = scope.relationships[parentNode.EntityID];
+                                    for (var relationship = 0; relationship < specCharRelationships.length; relationship++) {
+                                        if (specCharRelationships[relationship].Child == treeNode.guid) {
+                                            useArea = specCharRelationships[relationship].Kind;
+                                        }
+                                    }
+                                    var ConfiguredValue = {
+                                        UseArea: useArea,
+                                        CharacteristicID: treeNode.children[0].guid,
+                                        Value: [
+                                            { "Value": treeNode.children[0].value }
+                                        ]
+                                    };
+                                    if (parentNode.ConfiguredValue == null) {
+                                        parentNode.ConfiguredValue = [ConfiguredValue];
+                                    }
+                                    else {
+                                        parentNode.ConfiguredValue.push(ConfiguredValue);
+                                    }
+                                }
+                            }
+                            else if (InstanceTreeUtilities.isCharacteristicNode(treeNode)) {
                                 var useArea = "";
                                 var specCharRelationships = scope.relationships[parentNode.EntityID];
                                 for (var relationship = 0; relationship < specCharRelationships.length; relationship++) {

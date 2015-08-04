@@ -37,12 +37,28 @@ var InstanceTreeUtilities;
     function isSelectableCharacteristicNode(treeNode) {
         if (treeNode == null)
             return false;
-        if (treeNode.type == "TOrderChar" || treeNode.type == "TSpecCharValue") {
+        if (treeNode.type == "TSpecCharValue") {
             return true;
         }
         return false;
     }
     InstanceTreeUtilities.isSelectableCharacteristicNode = isSelectableCharacteristicNode;
+    function isUDCNode(treeNode) {
+        if (treeNode.type == "TUserDefinedCharacteristicValue" || isSelectableUDCNode(treeNode)) {
+            return true;
+        }
+        return false;
+    }
+    InstanceTreeUtilities.isUDCNode = isUDCNode;
+    function isSelectableUDCNode(treeNode) {
+        if (treeNode == null)
+            return false;
+        if (treeNode.type == "TOrderChar") {
+            return true;
+        }
+        return false;
+    }
+    InstanceTreeUtilities.isSelectableUDCNode = isSelectableUDCNode;
     function isCharacteristicUseNode(treeNode) {
         if (treeNode == null)
             return false;
