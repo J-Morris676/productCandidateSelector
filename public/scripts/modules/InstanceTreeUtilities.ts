@@ -19,6 +19,42 @@ module InstanceTreeUtilities {
         return false;
     }
 
+    export function isLaunchEntity(treeNode: data.IInstanceNode): boolean {
+        if (treeNode == null) return false;
+
+        var hierarchyPath = treeNode.elementHierarchy;
+        var finalSlashIndex: number = hierarchyPath.lastIndexOf("/");
+        var explicitType: string = hierarchyPath.substring(finalSlashIndex + 1);
+
+        if (explicitType == "Launch_Entity") {
+            return true;
+        }
+        return false;
+    }
+
+    export function isCharacteristicNode(treeNode: data.IInstanceNode): boolean {
+        if (treeNode.type == "TSpecCharUse" || isSelectableCharacteristicNode(treeNode)) {
+            return true;
+        }
+        return false;
+    }
+
+    export function isSelectableCharacteristicNode(treeNode: data.IInstanceNode): boolean {
+        if (treeNode == null) return false;
+        if (treeNode.type == "TOrderChar" || treeNode.type == "TSpecCharValue") {
+            return true;
+        }
+        return false;
+    }
+
+    export function isCharacteristicUseNode(treeNode: data.IInstanceNode): boolean {
+        if (treeNode == null) return false;
+        if (treeNode.type == "TSpecCharUse") {
+            return true;
+        }
+        return false;
+    }
+
     export function isChildOfNode(treeNode: data.IInstanceNode, childGuid: string): boolean {
         if (treeNode == null) return false;
 
@@ -64,6 +100,21 @@ module InstanceTreeUtilities {
         return isChild;
     }
 
+    export function findParent(treeRoot: data.IInstanceNode, node: data.IInstanceNode): data.IInstanceNode {
+        for (var childIndex: number = 0; childIndex < treeRoot.children.length; childIndex++) {
+            if (treeRoot.children[childIndex].nodeGuid == node.nodeGuid) {
+                return treeRoot;
+            }
+
+            var parent = findParent(treeRoot.children[childIndex], node);
+            if (parent) {
+                return parent;
+            }
+        }
+
+        return null;
+    }
+
     /*
         Candidate Tree usage
      */
@@ -81,6 +132,48 @@ module InstanceTreeUtilities {
         else {
             return false;
         }
+    }
+
+    export function canAddCharacteristic(node: data.IInstanceNode): boolean {
+        if (node == null || node.cardinality == null) return false;
+
+        var maxCardinality: number = parseInt(node.cardinality.max);
+
+        var characteristicUseValueCount = checkedCharacteristicsAmount(node);
+
+        if (characteristicUseValueCount < maxCardinality) {
+            return true;
+        }
+    }
+
+    export function isCharacteristicUseBetweenCardinality(node: data.IInstanceNode) : boolean {
+        if (node == null || node.cardinality == null) return false;
+
+        var minCardinality: number = parseInt(node.cardinality.min);
+        var maxCardinality: number = parseInt(node.cardinality.max);
+
+        var characteristicUseValueCount = checkedCharacteristicsAmount(node);
+
+        if (characteristicUseValueCount >= minCardinality && characteristicUseValueCount <= maxCardinality) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    function checkedCharacteristicsAmount(node: data.IInstanceNode): number {
+        if (node == null) return null;
+
+        var count = 0;
+
+        for (var childIndex = 0; childIndex < node.children.length; childIndex++) {
+            var characteristicNode: data.ISelectableCharInstanceNode = node.children[childIndex];
+            if (characteristicNode.checked) {
+                count++;
+            }
+        }
+        return count;
     }
 
     export function findNodeByNodeGuid(treeNode: data.IInstanceNode, nodeGuid: string): data.IInstanceNode {

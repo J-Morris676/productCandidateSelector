@@ -6,7 +6,7 @@
 /// <reference path="../interfaces/data.ts" />
 
 
-module app.services {
+module app.services.apiServices {
     'use strict';
 
     export class InstancesService

@@ -45,7 +45,7 @@ var app;
                         scope.selectedSubTree = _.clone(scope.data);
                         scope.selectedSubTree.children = [];
                         scope.selectedSubTree.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
-                        scope.selectedSubTree.children = prePopulateSubTreeWithOneToOneCardinality(scope.data.children);
+                        scope.selectedSubTree.children = prePopulateSubTreeWithValidChildren(scope.data.children);
                     }
                     function renderTreeAndRegisterEvents() {
                         $($(element)).find("#spec-tree").jstree("destroy");
@@ -56,14 +56,14 @@ var app;
                         } });
                         $($(element)).find("#spec-tree").on('select_node.jstree', setSelectedNode);
                     }
-                    function prePopulateSubTreeWithOneToOneCardinality(children) {
+                    function prePopulateSubTreeWithValidChildren(children) {
                         var childrenToPrePopulateWith = [];
                         for (var childIndex = 0; childIndex < children.length; childIndex++) {
-                            if (InstanceTreeUtilities.isOneToOneCardinality(children[childIndex])) {
+                            if ((InstanceTreeUtilities.isLaunchEntity(children[childIndex]) && InstanceTreeUtilities.isOneToOneCardinality(children[childIndex])) || InstanceTreeUtilities.isCharacteristicNode(children[childIndex])) {
                                 var addedChild = _.clone(children[childIndex]);
                                 addedChild.children = [];
                                 addedChild.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
-                                addedChild.children = prePopulateSubTreeWithOneToOneCardinality(children[childIndex].children);
+                                addedChild.children = prePopulateSubTreeWithValidChildren(children[childIndex].children);
                                 childrenToPrePopulateWith.push(addedChild);
                             }
                         }
@@ -72,6 +72,7 @@ var app;
                     function setSelectedNode(event, data) {
                         var selectedNode = data.node.original;
                         selectedNode.children = getNodeChildren(data.instance, data.instance.get_node(data.selected[0]));
+                        console.log(selectedNode);
                         scope.$apply(function () {
                             selectedSpecificationNode = selectedNode;
                             scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
@@ -102,7 +103,7 @@ var app;
                         var selectedCandidateParentObjectReference = InstanceTreeUtilities.findNodeByNodeGuid(scope.selectedSubTree, scope.selectedCandidateNode.nodeGuid);
                         var newNode = _.clone(selectedSpecificationNode, true);
                         newNode.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
-                        newNode.children = prePopulateSubTreeWithOneToOneCardinality(newNode.children);
+                        newNode.children = prePopulateSubTreeWithValidChildren(newNode.children);
                         selectedCandidateParentObjectReference.children.push(newNode);
                         scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
                     };

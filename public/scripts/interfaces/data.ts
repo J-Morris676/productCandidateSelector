@@ -15,6 +15,15 @@ module data {
         }]
     }
 
+    export interface IInstanceObject
+    {
+        Data: any;
+        Meta: {
+            ElementKind: string;
+            ElementHierarchy: string;
+        };
+    }
+
     export interface IInstances
     {
         [guid: string]: IInstance
@@ -39,16 +48,22 @@ module data {
         guid: string;
         nodeGuid?: string;
         children: Array<IInstanceNode>;
+        elementHierarchy: string;
         cardinality: {
             min: string;
             max: string;
         }
     }
 
+    export interface ISelectableCharInstanceNode extends IInstanceNode{
+        checked?: boolean;
+    }
+
     export interface ICandidateExportNode {
         _IsNewForCustomer: boolean;
         ID: string;
-        EntityId: string;
+        EntityID: string;
+        CharacteristicUse?: any
         ChildEntity: ICandidateExportNode;
     }
 }

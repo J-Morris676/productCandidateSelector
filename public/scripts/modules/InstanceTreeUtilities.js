@@ -15,6 +15,43 @@ var InstanceTreeUtilities;
         return false;
     }
     InstanceTreeUtilities.isOneToOneCardinality = isOneToOneCardinality;
+    function isLaunchEntity(treeNode) {
+        if (treeNode == null)
+            return false;
+        var hierarchyPath = treeNode.elementHierarchy;
+        var finalSlashIndex = hierarchyPath.lastIndexOf("/");
+        var explicitType = hierarchyPath.substring(finalSlashIndex + 1);
+        if (explicitType == "Launch_Entity") {
+            return true;
+        }
+        return false;
+    }
+    InstanceTreeUtilities.isLaunchEntity = isLaunchEntity;
+    function isCharacteristicNode(treeNode) {
+        if (treeNode.type == "TSpecCharUse" || isSelectableCharacteristicNode(treeNode)) {
+            return true;
+        }
+        return false;
+    }
+    InstanceTreeUtilities.isCharacteristicNode = isCharacteristicNode;
+    function isSelectableCharacteristicNode(treeNode) {
+        if (treeNode == null)
+            return false;
+        if (treeNode.type == "TOrderChar" || treeNode.type == "TSpecCharValue") {
+            return true;
+        }
+        return false;
+    }
+    InstanceTreeUtilities.isSelectableCharacteristicNode = isSelectableCharacteristicNode;
+    function isCharacteristicUseNode(treeNode) {
+        if (treeNode == null)
+            return false;
+        if (treeNode.type == "TSpecCharUse") {
+            return true;
+        }
+        return false;
+    }
+    InstanceTreeUtilities.isCharacteristicUseNode = isCharacteristicUseNode;
     function isChildOfNode(treeNode, childGuid) {
         if (treeNode == null)
             return false;
@@ -59,6 +96,19 @@ var InstanceTreeUtilities;
         return isChild;
     }
     InstanceTreeUtilities.isParentOfNode = isParentOfNode;
+    function findParent(treeRoot, node) {
+        for (var childIndex = 0; childIndex < treeRoot.children.length; childIndex++) {
+            if (treeRoot.children[childIndex].nodeGuid == node.nodeGuid) {
+                return treeRoot;
+            }
+            var parent = findParent(treeRoot.children[childIndex], node);
+            if (parent) {
+                return parent;
+            }
+        }
+        return null;
+    }
+    InstanceTreeUtilities.findParent = findParent;
     /*
         Candidate Tree usage
      */
@@ -76,6 +126,42 @@ var InstanceTreeUtilities;
         }
     }
     InstanceTreeUtilities.isBetweenCardinality = isBetweenCardinality;
+    function canAddCharacteristic(node) {
+        if (node == null || node.cardinality == null)
+            return false;
+        var maxCardinality = parseInt(node.cardinality.max);
+        var characteristicUseValueCount = checkedCharacteristicsAmount(node);
+        if (characteristicUseValueCount < maxCardinality) {
+            return true;
+        }
+    }
+    InstanceTreeUtilities.canAddCharacteristic = canAddCharacteristic;
+    function isCharacteristicUseBetweenCardinality(node) {
+        if (node == null || node.cardinality == null)
+            return false;
+        var minCardinality = parseInt(node.cardinality.min);
+        var maxCardinality = parseInt(node.cardinality.max);
+        var characteristicUseValueCount = checkedCharacteristicsAmount(node);
+        if (characteristicUseValueCount >= minCardinality && characteristicUseValueCount <= maxCardinality) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    InstanceTreeUtilities.isCharacteristicUseBetweenCardinality = isCharacteristicUseBetweenCardinality;
+    function checkedCharacteristicsAmount(node) {
+        if (node == null)
+            return null;
+        var count = 0;
+        for (var childIndex = 0; childIndex < node.children.length; childIndex++) {
+            var characteristicNode = node.children[childIndex];
+            if (characteristicNode.checked) {
+                count++;
+            }
+        }
+        return count;
+    }
     function findNodeByNodeGuid(treeNode, nodeGuid) {
         if (treeNode.nodeGuid == nodeGuid)
             return treeNode;

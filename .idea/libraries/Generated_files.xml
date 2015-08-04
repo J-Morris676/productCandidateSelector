@@ -9,6 +9,7 @@
         <item url="file://$PROJECT_DIR$/app.js" />
         <item url="file://$PROJECT_DIR$/public/scripts/interfaces/data.js" />
         <item url="file://$PROJECT_DIR$/public/scripts/controllers/selectController.js" />
+        <item url="file://$PROJECT_DIR$/public/scripts/services/dataGenerationServices.js" />
         <item url="file://$PROJECT_DIR$/public/scripts/app.js" />
         <item url="file://$PROJECT_DIR$/public/scripts/services/apiServices.js" />
       </sourceFilesUrls>
@@ -25,6 +26,7 @@
       <root url="file://$PROJECT_DIR$/app.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/interfaces/data.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/controllers/selectController.js" />
+      <root url="file://$PROJECT_DIR$/public/scripts/services/dataGenerationServices.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/app.js" />
       <root url="file://$PROJECT_DIR$/public/scripts/services/apiServices.js" />
     </CLASSES>

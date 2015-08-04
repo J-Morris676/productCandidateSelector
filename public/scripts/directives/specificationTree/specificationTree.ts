@@ -58,7 +58,7 @@ module app.directives.specificationTree {
                 scope.selectedSubTree.children = [];
                 scope.selectedSubTree.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
 
-                scope.selectedSubTree.children = prePopulateSubTreeWithOneToOneCardinality(scope.data.children);
+                scope.selectedSubTree.children = prePopulateSubTreeWithValidChildren(scope.data.children);
             }
 
             function renderTreeAndRegisterEvents(): void {
@@ -74,16 +74,19 @@ module app.directives.specificationTree {
                 $($(element)).find("#spec-tree").on('select_node.jstree', setSelectedNode);
             }
 
-            function prePopulateSubTreeWithOneToOneCardinality(children: data.IInstanceNode[]): data.IInstanceNode[] {
+            function prePopulateSubTreeWithValidChildren(children: data.IInstanceNode[]): data.IInstanceNode[] {
                 var childrenToPrePopulateWith: data.IInstanceNode[] = [];
 
                 for (var childIndex: number = 0; childIndex < children.length; childIndex++) {
-                    if (InstanceTreeUtilities.isOneToOneCardinality(children[childIndex])) {
+
+                    if ((InstanceTreeUtilities.isLaunchEntity(children[childIndex])
+                            && InstanceTreeUtilities.isOneToOneCardinality(children[childIndex]))
+                            || InstanceTreeUtilities.isCharacteristicNode(children[childIndex])) {
                         var addedChild: data.IInstanceNode = _.clone(children[childIndex]);
                         addedChild.children = [];
                         addedChild.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
 
-                        addedChild.children = prePopulateSubTreeWithOneToOneCardinality(children[childIndex].children);
+                        addedChild.children = prePopulateSubTreeWithValidChildren(children[childIndex].children);
                         childrenToPrePopulateWith.push(addedChild);
                     }
                 }
@@ -91,10 +94,12 @@ module app.directives.specificationTree {
                 return childrenToPrePopulateWith;
             }
 
+
+
             function setSelectedNode(event, data) {
                 var selectedNode: data.IInstanceNode = data.node.original;
                 selectedNode.children = getNodeChildren(data.instance, data.instance.get_node(data.selected[0]));
-
+                console.log(selectedNode);
                 scope.$apply(function() {
                     selectedSpecificationNode = selectedNode;
                     scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
@@ -131,7 +136,7 @@ module app.directives.specificationTree {
                 var selectedCandidateParentObjectReference: data.IInstanceNode = InstanceTreeUtilities.findNodeByNodeGuid(scope.selectedSubTree, scope.selectedCandidateNode.nodeGuid);
                 var newNode: data.IInstanceNode = _.clone(selectedSpecificationNode, true);
                 newNode.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
-                newNode.children = prePopulateSubTreeWithOneToOneCardinality(newNode.children);
+                newNode.children = prePopulateSubTreeWithValidChildren(newNode.children);
 
                 selectedCandidateParentObjectReference.children.push(newNode);
                 scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();

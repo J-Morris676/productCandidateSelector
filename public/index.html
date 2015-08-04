@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="bower_components/jstree/dist/themes/default/style.min.css" rel="stylesheet">
+        <link href="bower_components/jstree/dist/themes/default/style.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -55,7 +55,7 @@
 
                             <div ng-show="candidateTree" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                 <div class="well">
-                                    <candidate-tree selected-node="selectedCandidateNode" data="candidateTree"></candidate-tree>
+                                    <candidate-tree relationships="relationships" selected-node="selectedCandidateNode" data="candidateTree"></candidate-tree>
                                 </div>
                             </div>
                         </div>
@@ -82,6 +82,7 @@
         <script src="scripts/modules/InstanceTreeUtilities.js"></script>
 
         <script src="scripts/services/apiServices.js"></script>
+        <script src="scripts/services/dataGenerationServices.js"></script>
 
         <script src="scripts/filters/selectFilters.js"></script>
         <script src="scripts/controllers/selectController.js"></script>
