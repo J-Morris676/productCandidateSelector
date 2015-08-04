@@ -59,7 +59,7 @@ var app;
                     function prePopulateSubTreeWithValidChildren(children) {
                         var childrenToPrePopulateWith = [];
                         for (var childIndex = 0; childIndex < children.length; childIndex++) {
-                            if ((InstanceTreeUtilities.isLaunchEntity(children[childIndex]) && InstanceTreeUtilities.isOneToOneCardinality(children[childIndex])) || InstanceTreeUtilities.isCharacteristicNode(children[childIndex])) {
+                            if ((InstanceTreeUtilities.isLaunchEntity(children[childIndex]) && InstanceTreeUtilities.isOneToOneCardinality(children[childIndex])) || InstanceTreeUtilities.isCharacteristicNode(children[childIndex]) || InstanceTreeUtilities.isUDCNode(children[childIndex])) {
                                 var addedChild = _.clone(children[childIndex]);
                                 addedChild.children = [];
                                 addedChild.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();

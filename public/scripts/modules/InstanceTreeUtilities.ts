@@ -39,9 +39,25 @@ module InstanceTreeUtilities {
         return false;
     }
 
+
     export function isSelectableCharacteristicNode(treeNode: data.IInstanceNode): boolean {
         if (treeNode == null) return false;
-        if (treeNode.type == "TOrderChar" || treeNode.type == "TSpecCharValue") {
+        if (treeNode.type == "TSpecCharValue") {
+            return true;
+        }
+        return false;
+    }
+
+    export function isUDCNode(treeNode: data.IInstanceNode): boolean {
+        if (treeNode.type == "TUserDefinedCharacteristicValue" || isSelectableUDCNode(treeNode)) {
+            return true;
+        }
+        return false;
+    }
+
+    export function isSelectableUDCNode(treeNode: data.IInstanceNode): boolean {
+        if (treeNode == null) return false;
+        if (treeNode.type == "TOrderChar") {
             return true;
         }
         return false;

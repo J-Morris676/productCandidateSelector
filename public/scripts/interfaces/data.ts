@@ -59,11 +59,16 @@ module data {
         checked?: boolean;
     }
 
+    export interface ISelectableUDCInstanceNode extends IInstanceNode{
+        value?: string;
+    }
+
     export interface ICandidateExportNode {
         _IsNewForCustomer: boolean;
         ID: string;
         EntityID: string;
-        CharacteristicUse?: any
         ChildEntity: ICandidateExportNode;
+        CharacteristicUse?: any;
+        ConfiguredValue?: any;
     }
 }

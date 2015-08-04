@@ -1,0 +1,49 @@
+@import (reference) "../bower_components/bootstrap/less/variables.less";
+@import (reference) "../bower_components/bootstrap/less/glyphicons.less";
+@import (reference) "../bower_components/jstree/src/themes/base.less";
+
+
+@jsTree-theme-image: "../bower_components/jstree/dist/themes/default/32px.png";
+
+.udc-leaf {
+  .glyphicon;
+  .glyphicon-comment;
+
+  color:lightgray;
+}
+
+.udc-leaf-parent {
+  .glyphicon;
+  .glyphicon-edit;
+
+  color:lightgray;
+}
+
+.characteristic-leaf-unselected {
+
+  width:24px;
+  height:24px;
+  cursor:pointer;
+
+  background-image: url("@{jsTree-theme-image}")!important;
+  background-position:-164px -4px!important;
+}
+
+.characteristic-leaf-selected {
+  .jstree-icon;
+
+  width:24px;
+  height:24px;
+  cursor:pointer;
+
+  background-image: url("@{jsTree-theme-image}")!important;
+  background-position:-228px -4px!important;
+}
+
+.characteristic-leaf-parent {
+  .glyphicon;
+  .glyphicon-check;
+
+  color:lightgray;
+}
+

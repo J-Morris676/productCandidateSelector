@@ -81,7 +81,8 @@ module app.directives.specificationTree {
 
                     if ((InstanceTreeUtilities.isLaunchEntity(children[childIndex])
                             && InstanceTreeUtilities.isOneToOneCardinality(children[childIndex]))
-                            || InstanceTreeUtilities.isCharacteristicNode(children[childIndex])) {
+                            || InstanceTreeUtilities.isCharacteristicNode(children[childIndex])
+                            || InstanceTreeUtilities.isUDCNode(children[childIndex])) {
                         var addedChild: data.IInstanceNode = _.clone(children[childIndex]);
                         addedChild.children = [];
                         addedChild.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();

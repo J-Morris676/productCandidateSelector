@@ -16,7 +16,7 @@ module app.services.dataGenerationServices {
             this.relationships = relationships;
         }
 
-        public generateSpecificationTreeData(guid: string) {
+        public generateSpecificationTreeData(guid: string): data.IInstanceNode {
             var instance: data.IInstance = this.instances[guid];
             var instanceAsObjects: data.IInstanceObject = this.convertInstanceObjectArraysToObjects(instance);
 
