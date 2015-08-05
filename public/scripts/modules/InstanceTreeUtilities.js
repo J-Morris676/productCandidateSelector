@@ -44,6 +44,8 @@ var InstanceTreeUtilities;
     }
     InstanceTreeUtilities.isSelectableCharacteristicNode = isSelectableCharacteristicNode;
     function isUDCNode(treeNode) {
+        if (treeNode == null)
+            return false;
         if (treeNode.type == "TUserDefinedCharacteristicValue" || isSelectableUDCNode(treeNode)) {
             return true;
         }
@@ -79,17 +81,6 @@ var InstanceTreeUtilities;
         return false;
     }
     InstanceTreeUtilities.isChildOfNode = isChildOfNode;
-    function isLowerThanMaxCardinality(candidateTreeNode) {
-        var maxCardinality = parseInt(candidateTreeNode.cardinality.max);
-        var childAmount = candidateTreeNode.children.length;
-        if (childAmount < maxCardinality) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    InstanceTreeUtilities.isLowerThanMaxCardinality = isLowerThanMaxCardinality;
     function findNodeInTreeByGuid(treeNode, guid) {
         if (treeNode.guid == guid)
             return treeNode;
@@ -142,6 +133,32 @@ var InstanceTreeUtilities;
         }
     }
     InstanceTreeUtilities.isBetweenCardinality = isBetweenCardinality;
+    function isLowerThanMaxGroupCardinality(parentNode) {
+        if (parentNode.groupCardinality == null)
+            return true;
+        else {
+            var maxCardinality = parseInt(parentNode.groupCardinality.max);
+            var childCount = parentNode.children.length;
+            if (childCount < maxCardinality) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    InstanceTreeUtilities.isLowerThanMaxGroupCardinality = isLowerThanMaxGroupCardinality;
+    function isLowerThanMaxCardinality(candidateTreeNode) {
+        var maxCardinality = parseInt(candidateTreeNode.cardinality.max);
+        var childAmount = candidateTreeNode.children.length;
+        if (childAmount < maxCardinality) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    InstanceTreeUtilities.isLowerThanMaxCardinality = isLowerThanMaxCardinality;
     function canAddCharacteristic(node) {
         if (node == null || node.cardinality == null)
             return false;

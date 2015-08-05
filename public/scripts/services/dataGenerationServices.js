@@ -28,10 +28,16 @@ var app;
                         guid: guid,
                         children: Array(),
                         cardinality: null,
+                        groupCardinality: null,
                         elementHierarchy: instanceMeta.ElementHierarchy
                     };
                     if (instanceMeta.ElementHierarchy.indexOf("Launch_Entity") != -1) {
                         this.nameNodeForLaunchEntity(node, instanceData.Name);
+                        node.groupCardinality = this.findGroupCardinality(children);
+                        //TODO: This logs any nodes that have Group Cardinality, remove when finished:
+                        if (node.groupCardinality != null) {
+                            console.log(node);
+                        }
                     }
                     else if (instanceMeta.ElementKind == "TSpecCharUse") {
                         node.text = instanceData.Description;
@@ -73,6 +79,21 @@ var app;
                         }
                     }
                     return node;
+                };
+                specificationTreeDataGenerationService.prototype.findGroupCardinality = function (entityRelationChildren) {
+                    var cardinality = null;
+                    for (var childIndex = 0; childIndex < entityRelationChildren.length; childIndex++) {
+                        if (entityRelationChildren[childIndex].Kind == "TChild_Group_Cardinality_Rule") {
+                            var instance = this.instances[entityRelationChildren[childIndex].Child];
+                            var instanceAsObjects = this.convertInstanceObjectArraysToObjects(instance);
+                            cardinality = {
+                                "max": instanceAsObjects.Data.Maximum_Child_Elements,
+                                "min": instanceAsObjects.Data.Minimum_Child_Elements
+                            };
+                            break;
+                        }
+                    }
+                    return cardinality;
                 };
                 specificationTreeDataGenerationService.prototype.findHierarchyType = function (path) {
                     var finalSlashIndex = path.lastIndexOf("/");

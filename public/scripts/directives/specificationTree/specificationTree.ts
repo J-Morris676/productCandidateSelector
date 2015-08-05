@@ -14,6 +14,7 @@ module app.directives.specificationTree {
         data: data.IInstanceNode;
         selectedSubTree: data.IInstanceNode;
         selectedCandidateNode: data.IInstanceNode;
+        selectedSpecificationNode: data.IInstanceNode;
 
         canBeAddedToProductCandidate: boolean;
 
@@ -26,6 +27,7 @@ module app.directives.specificationTree {
             data: "=",
             selectedSubTree: "=?",
             selectedCandidateNode: "=?",
+            selectedSpecificationNode: "@",
 
             canBeAddedToProductCandidate: "@",
             insertIntoProductCandidate: "@"
@@ -33,7 +35,6 @@ module app.directives.specificationTree {
         public templateUrl = "scripts/directives/specificationTree/specificationTree.html";
 
         public link(scope:ISpecificationTreeScope, element:EventTarget, attributes:ng.IAttributes) {
-            var selectedSpecificationNode: data.IInstanceNode = null;
             scope.canBeAddedToProductCandidate = false;
 
             scope.$watch("selectedCandidateNode", function() {
@@ -43,6 +44,7 @@ module app.directives.specificationTree {
              if (scope.data == null) {
                 scope.$watch("data", function () {
                     if (scope.data != null) {
+                        scope.selectedSpecificationNode = null;
                         initSubTreeWithNodeGuidsAndOneToOneCardinality();
                         renderTreeAndRegisterEvents();
                     }
@@ -100,15 +102,18 @@ module app.directives.specificationTree {
             function setSelectedNode(event, data) {
                 var selectedNode: data.IInstanceNode = data.node.original;
                 selectedNode.children = getNodeChildren(data.instance, data.instance.get_node(data.selected[0]));
+
                 console.log(selectedNode);
+
                 scope.$apply(function() {
-                    selectedSpecificationNode = selectedNode;
+                    scope.selectedSpecificationNode = selectedNode;
                     scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
                 });
             }
 
             function getNodeChildren(instance, node): data.IInstanceNode[] {
                 var children: data.IInstanceNode[] = [];
+
                 for (var childIndex = 0; childIndex < node.children.length; childIndex++) {
                     var child = instance.get_node(node.children[childIndex]).original;
                     child.children = getNodeChildren(instance, instance.get_node(node.children[childIndex]));
@@ -118,14 +123,15 @@ module app.directives.specificationTree {
             }
 
             function checkIfSelectedNodesCanBeAddedToCandidateTree(): boolean {
-                if (scope.selectedCandidateNode == null || selectedSpecificationNode == null) {
+                if (scope.selectedCandidateNode == null || scope.selectedSpecificationNode == null) {
                     return false;
                 }
 
                 var specificationParent = InstanceTreeUtilities.findNodeInTreeByGuid(scope.data, scope.selectedCandidateNode.guid);
 
-                if (InstanceTreeUtilities.isParentOfNode(specificationParent, selectedSpecificationNode)) {
-                    if (InstanceTreeUtilities.isBetweenCardinality(scope.selectedCandidateNode, selectedSpecificationNode)) {
+                if (InstanceTreeUtilities.isParentOfNode(specificationParent, scope.selectedSpecificationNode)) {
+                    if (InstanceTreeUtilities.isBetweenCardinality(scope.selectedCandidateNode, scope.selectedSpecificationNode)
+                        && InstanceTreeUtilities.isLowerThanMaxGroupCardinality(scope.selectedCandidateNode)) {
                         return true;
                     }
                 }
@@ -135,7 +141,7 @@ module app.directives.specificationTree {
 
             scope.insertIntoProductCandidate = function(): void {
                 var selectedCandidateParentObjectReference: data.IInstanceNode = InstanceTreeUtilities.findNodeByNodeGuid(scope.selectedSubTree, scope.selectedCandidateNode.nodeGuid);
-                var newNode: data.IInstanceNode = _.clone(selectedSpecificationNode, true);
+                var newNode: data.IInstanceNode = _.clone(scope.selectedSpecificationNode, true);
                 newNode.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
                 newNode.children = prePopulateSubTreeWithValidChildren(newNode.children);
 

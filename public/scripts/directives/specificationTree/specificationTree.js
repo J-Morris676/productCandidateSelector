@@ -18,13 +18,13 @@ var app;
                         data: "=",
                         selectedSubTree: "=?",
                         selectedCandidateNode: "=?",
+                        selectedSpecificationNode: "@",
                         canBeAddedToProductCandidate: "@",
                         insertIntoProductCandidate: "@"
                     };
                     this.templateUrl = "scripts/directives/specificationTree/specificationTree.html";
                 }
                 specificationTree.prototype.link = function (scope, element, attributes) {
-                    var selectedSpecificationNode = null;
                     scope.canBeAddedToProductCandidate = false;
                     scope.$watch("selectedCandidateNode", function () {
                         scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
@@ -32,6 +32,7 @@ var app;
                     if (scope.data == null) {
                         scope.$watch("data", function () {
                             if (scope.data != null) {
+                                scope.selectedSpecificationNode = null;
                                 initSubTreeWithNodeGuidsAndOneToOneCardinality();
                                 renderTreeAndRegisterEvents();
                             }
@@ -74,7 +75,7 @@ var app;
                         selectedNode.children = getNodeChildren(data.instance, data.instance.get_node(data.selected[0]));
                         console.log(selectedNode);
                         scope.$apply(function () {
-                            selectedSpecificationNode = selectedNode;
+                            scope.selectedSpecificationNode = selectedNode;
                             scope.canBeAddedToProductCandidate = checkIfSelectedNodesCanBeAddedToCandidateTree();
                         });
                     }
@@ -88,12 +89,12 @@ var app;
                         return children;
                     }
                     function checkIfSelectedNodesCanBeAddedToCandidateTree() {
-                        if (scope.selectedCandidateNode == null || selectedSpecificationNode == null) {
+                        if (scope.selectedCandidateNode == null || scope.selectedSpecificationNode == null) {
                             return false;
                         }
                         var specificationParent = InstanceTreeUtilities.findNodeInTreeByGuid(scope.data, scope.selectedCandidateNode.guid);
-                        if (InstanceTreeUtilities.isParentOfNode(specificationParent, selectedSpecificationNode)) {
-                            if (InstanceTreeUtilities.isBetweenCardinality(scope.selectedCandidateNode, selectedSpecificationNode)) {
+                        if (InstanceTreeUtilities.isParentOfNode(specificationParent, scope.selectedSpecificationNode)) {
+                            if (InstanceTreeUtilities.isBetweenCardinality(scope.selectedCandidateNode, scope.selectedSpecificationNode) && InstanceTreeUtilities.isLowerThanMaxGroupCardinality(scope.selectedCandidateNode)) {
                                 return true;
                             }
                         }
@@ -101,7 +102,7 @@ var app;
                     }
                     scope.insertIntoProductCandidate = function () {
                         var selectedCandidateParentObjectReference = InstanceTreeUtilities.findNodeByNodeGuid(scope.selectedSubTree, scope.selectedCandidateNode.nodeGuid);
-                        var newNode = _.clone(selectedSpecificationNode, true);
+                        var newNode = _.clone(scope.selectedSpecificationNode, true);
                         newNode.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
                         newNode.children = prePopulateSubTreeWithValidChildren(newNode.children);
                         selectedCandidateParentObjectReference.children.push(newNode);

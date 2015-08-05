@@ -19,5 +19,17 @@
         </div>
     </div>
 
+    <div ng-show="selectedSpecificationNode.cardinality">
+        <b>Cardinality:</b>
+        <span>
+            {{selectedSpecificationNode.cardinality.min}}:{{selectedSpecificationNode.cardinality.max}}
+        </span>
+    </div>
+    <div ng-show="selectedSpecificationNode.groupCardinality">
+        <b>Group Cardinality:</b>
+        <span >
+            {{selectedSpecificationNode.groupCardinality.min}}:{{selectedSpecificationNode.groupCardinality.max}}
+        </span>
+    </div>
 </div>
 

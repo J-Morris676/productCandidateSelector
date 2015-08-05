@@ -49,10 +49,13 @@ module data {
         nodeGuid?: string;
         children: Array<IInstanceNode>;
         elementHierarchy: string;
-        cardinality: {
-            min: string;
-            max: string;
-        }
+        cardinality: ICardinality;
+        groupCardinality: ICardinality;
+    }
+
+    export interface ICardinality {
+        min: string;
+        max: string;
     }
 
     export interface ISelectableCharInstanceNode extends IInstanceNode{

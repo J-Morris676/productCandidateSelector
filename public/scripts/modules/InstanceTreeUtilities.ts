@@ -49,6 +49,7 @@ module InstanceTreeUtilities {
     }
 
     export function isUDCNode(treeNode: data.IInstanceNode): boolean {
+        if (treeNode == null) return false;
         if (treeNode.type == "TUserDefinedCharacteristicValue" || isSelectableUDCNode(treeNode)) {
             return true;
         }
@@ -80,18 +81,6 @@ module InstanceTreeUtilities {
             }
         }
         return false;
-    }
-
-    export function isLowerThanMaxCardinality(candidateTreeNode: data.IInstanceNode): boolean {
-        var maxCardinality: number = parseInt(candidateTreeNode.cardinality.max);
-        var childAmount: number = candidateTreeNode.children.length;
-
-        if (childAmount < maxCardinality) {
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 
     export function findNodeInTreeByGuid(treeNode: data.IInstanceNode, guid: string): data.IInstanceNode {
@@ -143,6 +132,34 @@ module InstanceTreeUtilities {
         var candidateChildCount = childrenWithGuidCount(parentNode, childToAdd.guid);
 
         if (candidateChildCount >= minCardinality && candidateChildCount < maxCardinality) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    export function isLowerThanMaxGroupCardinality(parentNode: data.IInstanceNode): boolean {
+        if (parentNode.groupCardinality == null) return true;
+        else {
+            var maxCardinality: number = parseInt(parentNode.groupCardinality.max);
+
+            var childCount = parentNode.children.length;
+
+            if (childCount < maxCardinality) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+
+    export function isLowerThanMaxCardinality(candidateTreeNode: data.IInstanceNode): boolean {
+        var maxCardinality: number = parseInt(candidateTreeNode.cardinality.max);
+        var childAmount: number = candidateTreeNode.children.length;
+
+        if (childAmount < maxCardinality) {
             return true;
         }
         else {
