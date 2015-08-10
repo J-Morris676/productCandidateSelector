@@ -29,10 +29,10 @@ app.get("/api/data", function (req, res) {
     var files = fs.readdirSync(__dirname + "/data");
     res.json(files);
 });
-app.get("/api/data/instances", function (req, res) {
+app.get("/api/data/:storyNo/instances", function (req, res) {
     logger.info("GET: Instances");
     try {
-        var instances = JSON.parse(fs.readFileSync('data/59340/Instances.json', 'utf8'));
+        var instances = JSON.parse(fs.readFileSync('data/' + req.params.storyNo + '/Instances.json', 'utf8'));
         res.json(instances);
     }
     catch (e) {
@@ -40,10 +40,10 @@ app.get("/api/data/instances", function (req, res) {
         res.status(500).json(e);
     }
 });
-app.get("/api/data/relationships", function (req, res) {
+app.get("/api/data/:storyNo/relationships", function (req, res) {
     logger.info("GET: Relationships");
     try {
-        var relationships = JSON.parse(fs.readFileSync('data/59340/Relationships.json', 'utf8'));
+        var relationships = JSON.parse(fs.readFileSync('data/' + req.params.storyNo + '/Relationships.json', 'utf8'));
         res.json(relationships);
     }
     catch (e) {
