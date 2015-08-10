@@ -22,7 +22,7 @@ module app.services.apiServices {
 
         getInstances = ():ng.IPromise<data.IInstances> =>
         {
-            return this.$http.get("/api/docs/instances")
+            return this.$http.get("/api/data/instances")
         };
     }
 
@@ -37,7 +37,7 @@ module app.services.apiServices {
         }
 
         getRelationships = ():ng.IPromise<data.IRelationships> => {
-            return this.$http.get("/api/docs/relationships")
+            return this.$http.get("/api/data/relationships")
         };
     }
 

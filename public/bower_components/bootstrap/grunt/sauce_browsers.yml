@@ -1,5 +1,5 @@
 [
-  # Docs: https://saucelabs.com/docs/platforms/webdriver
+  # Docs: https://saucelabs.com/data/platforms/webdriver
 
   {
     browserName: "safari",

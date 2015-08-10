@@ -31,8 +31,12 @@ var app;
                 this.$scope = $scope;
                 this.specificationDataGenerationService = specificationDataGenerationService;
                 this.$filter = $filter;
-                instanceService.getInstances().success(this.assignInstancesResponse).error(this.errorHandler);
-                relationshipService.getRelationships().success(this.assignRelationshipsResponse).error(this.errorHandler);
+                instanceService.getInstances()
+                    .success(this.assignInstancesResponse)
+                    .error(this.errorHandler);
+                relationshipService.getRelationships()
+                    .success(this.assignRelationshipsResponse)
+                    .error(this.errorHandler);
                 $scope.events = this;
             }
             return selectController;

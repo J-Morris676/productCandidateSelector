@@ -45,7 +45,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // AngularStatic
-    // see http://docs.angular.org/api
+    // see http://data.angular.org/api
     ///////////////////////////////////////////////////////////////////////////
     interface IAngularStatic {
         bind(context: any, fn: Function, ...args: any[]): Function;
@@ -289,7 +289,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // Module
-    // see http://docs.angular.org/api/angular.Module
+    // see http://data.angular.org/api/angular.Module
     ///////////////////////////////////////////////////////////////////////////
     interface IModule {
         animation(name: string, animationFactory: Function): IModule;
@@ -409,7 +409,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // Attributes
-    // see http://docs.angular.org/api/ng.$compile.directive.Attributes
+    // see http://data.angular.org/api/ng.$compile.directive.Attributes
     ///////////////////////////////////////////////////////////////////////////
     interface IAttributes {
         /**
@@ -424,7 +424,7 @@ declare module angular {
          *
          * Also there is special case for Moz prefix starting with upper case letter.
          *
-         * For further information check out the guide on @see https://docs.angular.org/guide/directive#matching-directives
+         * For further information check out the guide on @see https://data.angular.org/guide/directive#matching-directives
          */
         $normalize(name: string): void;
 
@@ -464,7 +464,7 @@ declare module angular {
 
     /**
      * form.FormController - type in module ng
-     * see https://docs.angular.org/api/ng/type/form.FormController
+     * see https://data.angular.org/api/ng/type/form.FormController
      */
     interface IFormController {
 
@@ -492,7 +492,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // NgModelController
-    // see http://docs.angular.org/api/ng.directive:ngModel.NgModelController
+    // see http://data.angular.org/api/ng.directive:ngModel.NgModelController
     ///////////////////////////////////////////////////////////////////////////
     interface INgModelController {
         $render(): void;
@@ -557,7 +557,7 @@ declare module angular {
 
     /**
      * $rootScope - $rootScopeProvider - service in module ng
-     * see https://docs.angular.org/api/ng/type/$rootScope.Scope and https://docs.angular.org/api/ng/service/$rootScope
+     * see https://data.angular.org/api/ng/type/$rootScope.Scope and https://data.angular.org/api/ng/service/$rootScope
      */
     interface IRootScopeService {
         [index: string]: any;
@@ -640,7 +640,7 @@ declare module angular {
 
     /**
      * $scope for ngRepeat directive.
-     * see https://docs.angular.org/api/ng/directive/ngRepeat
+     * see https://data.angular.org/api/ng/directive/ngRepeat
      */
     interface IRepeatScope extends IScope {
 
@@ -705,7 +705,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // WindowService
-    // see http://docs.angular.org/api/ng.$window
+    // see http://data.angular.org/api/ng.$window
     ///////////////////////////////////////////////////////////////////////////
     interface IWindowService extends Window {
         [key: string]: any;
@@ -722,7 +722,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // TimeoutService
-    // see http://docs.angular.org/api/ng.$timeout
+    // see http://data.angular.org/api/ng.$timeout
     ///////////////////////////////////////////////////////////////////////////
     interface ITimeoutService {
         (func: Function, delay?: number, invokeApply?: boolean): IPromise<any>;
@@ -731,7 +731,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // IntervalService
-    // see http://docs.angular.org/api/ng.$interval
+    // see http://data.angular.org/api/ng.$interval
     ///////////////////////////////////////////////////////////////////////////
     interface IIntervalService {
         (func: Function, delay: number, count?: number, invokeApply?: boolean): IPromise<any>;
@@ -740,7 +740,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // AngularProvider
-    // see http://docs.angular.org/api/ng/provider/$animateProvider
+    // see http://data.angular.org/api/ng/provider/$animateProvider
     ///////////////////////////////////////////////////////////////////////////
     interface IAnimateProvider {
         /**
@@ -772,7 +772,7 @@ declare module angular {
      *
      * Filters are used for formatting data displayed to the user.
      *
-     * see https://docs.angular.org/api/ng/service/$filter
+     * see https://data.angular.org/api/ng/service/$filter
      */
     interface IFilterService {
         /**
@@ -789,7 +789,7 @@ declare module angular {
      *
      * Filters are just functions which transform input to an output. However filters need to be Dependency Injected. To achieve this a filter definition consists of a factory function which is annotated with dependencies and is responsible for creating a filter function.
      *
-     * see https://docs.angular.org/api/ng/provider/$filterProvider
+     * see https://data.angular.org/api/ng/provider/$filterProvider
      */
     interface IFilterProvider extends IServiceProvider {
         /**
@@ -802,7 +802,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // LocaleService
-    // see http://docs.angular.org/api/ng.$locale
+    // see http://data.angular.org/api/ng.$locale
     ///////////////////////////////////////////////////////////////////////////
     interface ILocaleService {
         id: string;
@@ -851,8 +851,8 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // LogService
-    // see http://docs.angular.org/api/ng.$log
-    // see http://docs.angular.org/api/ng.$logProvider
+    // see http://data.angular.org/api/ng.$log
+    // see http://data.angular.org/api/ng.$logProvider
     ///////////////////////////////////////////////////////////////////////////
     interface ILogService {
         debug: ILogCall;
@@ -875,8 +875,8 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // ParseService
-    // see http://docs.angular.org/api/ng.$parse
-    // see http://docs.angular.org/api/ng.$parseProvider
+    // see http://data.angular.org/api/ng.$parse
+    // see http://data.angular.org/api/ng.$parseProvider
     ///////////////////////////////////////////////////////////////////////////
     interface IParseService {
         (expression: string): ICompiledExpression;
@@ -901,7 +901,7 @@ declare module angular {
 
     /**
      * $location - $locationProvider - service in module ng
-     * see https://docs.angular.org/api/ng/service/$location
+     * see https://data.angular.org/api/ng/service/$location
      */
     interface ILocationService {
         absUrl(): string;
@@ -968,13 +968,13 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // DocumentService
-    // see http://docs.angular.org/api/ng.$document
+    // see http://data.angular.org/api/ng.$document
     ///////////////////////////////////////////////////////////////////////////
     interface IDocumentService extends IAugmentedJQuery {}
 
     ///////////////////////////////////////////////////////////////////////////
     // ExceptionHandlerService
-    // see http://docs.angular.org/api/ng.$exceptionHandler
+    // see http://data.angular.org/api/ng.$exceptionHandler
     ///////////////////////////////////////////////////////////////////////////
     interface IExceptionHandlerService {
         (exception: Error, cause?: string): void;
@@ -982,7 +982,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // RootElementService
-    // see http://docs.angular.org/api/ng.$rootElement
+    // see http://data.angular.org/api/ng.$rootElement
     ///////////////////////////////////////////////////////////////////////////
     interface IRootElementService extends JQuery {}
 
@@ -993,7 +993,7 @@ declare module angular {
     /**
      * $q - service in module ng
      * A promise/deferred implementation inspired by Kris Kowal's Q.
-     * See http://docs.angular.org/api/ng/service/$q
+     * See http://data.angular.org/api/ng/service/$q
      */
     interface IQService {
         new (resolver: (resolve: IQResolveReject<any>) => any): IPromise<any>;
@@ -1072,7 +1072,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // AnchorScrollService
-    // see http://docs.angular.org/api/ng.$anchorScroll
+    // see http://data.angular.org/api/ng.$anchorScroll
     ///////////////////////////////////////////////////////////////////////////
     interface IAnchorScrollService {
         (): void;
@@ -1089,7 +1089,7 @@ declare module angular {
      *
      * Factory that constructs Cache objects and gives access to them.
      *
-     * see https://docs.angular.org/api/ng/service/$cacheFactory
+     * see https://data.angular.org/api/ng/service/$cacheFactory
      */
     interface ICacheFactoryService {
         /**
@@ -1121,7 +1121,7 @@ declare module angular {
      *
      * A cache object used to store and retrieve data, primarily used by $http and the script directive to cache templates and other data.
      *
-     * see https://docs.angular.org/api/ng/type/$cacheFactory.Cache
+     * see https://data.angular.org/api/ng/type/$cacheFactory.Cache
      */
     interface ICacheObject {
         /**
@@ -1178,8 +1178,8 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // CompileService
-    // see http://docs.angular.org/api/ng.$compile
-    // see http://docs.angular.org/api/ng.$compileProvider
+    // see http://data.angular.org/api/ng.$compile
+    // see http://data.angular.org/api/ng.$compileProvider
     ///////////////////////////////////////////////////////////////////////////
     interface ICompileService {
         (element: string, transclude?: ITranscludeFunction, maxPriority?: number): ITemplateLinkingFunction;
@@ -1222,8 +1222,8 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // ControllerService
-    // see http://docs.angular.org/api/ng.$controller
-    // see http://docs.angular.org/api/ng.$controllerProvider
+    // see http://data.angular.org/api/ng.$controller
+    // see http://data.angular.org/api/ng.$controllerProvider
     ///////////////////////////////////////////////////////////////////////////
     interface IControllerService {
         // Although the documentation doesn't state this, locals are optional
@@ -1239,7 +1239,7 @@ declare module angular {
 
     /**
      * HttpService
-     * see http://docs.angular.org/api/ng/service/$http
+     * see http://data.angular.org/api/ng/service/$http
      */
     interface IHttpService {
         /**
@@ -1319,7 +1319,7 @@ declare module angular {
 
     /**
      * Object describing the request to be made and how it should be processed.
-     * see http://docs.angular.org/api/ng/service/$http#usage
+     * see http://data.angular.org/api/ng/service/$http#usage
      */
     interface IRequestShortcutConfig {
         /**
@@ -1386,7 +1386,7 @@ declare module angular {
 
     /**
      * Object describing the request to be made and how it should be processed.
-     * see http://docs.angular.org/api/ng/service/$http#usage
+     * see http://data.angular.org/api/ng/service/$http#usage
      */
     interface IRequestConfig extends IRequestShortcutConfig {
         /**
@@ -1424,7 +1424,7 @@ declare module angular {
 
     /**
      * Object that controls the defaults for $http provider
-     * https://docs.angular.org/api/ng/service/$http#defaults
+     * https://data.angular.org/api/ng/service/$http#defaults
      */
     interface IHttpProviderDefaults {
         cache?: boolean;
@@ -1453,7 +1453,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // HttpBackendService
-    // see http://docs.angular.org/api/ng.$httpBackend
+    // see http://data.angular.org/api/ng.$httpBackend
     // You should never need to use this service directly.
     ///////////////////////////////////////////////////////////////////////////
     interface IHttpBackendService {
@@ -1463,8 +1463,8 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // InterpolateService
-    // see http://docs.angular.org/api/ng.$interpolate
-    // see http://docs.angular.org/api/ng.$interpolateProvider
+    // see http://data.angular.org/api/ng.$interpolate
+    // see http://data.angular.org/api/ng.$interpolateProvider
     ///////////////////////////////////////////////////////////////////////////
     interface IInterpolateService {
         (text: string, mustHaveExpression?: boolean, trustedContext?: string, allOrNothing?: boolean): IInterpolationFunction;
@@ -1485,13 +1485,13 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // TemplateCacheService
-    // see http://docs.angular.org/api/ng.$templateCache
+    // see http://data.angular.org/api/ng.$templateCache
     ///////////////////////////////////////////////////////////////////////////
     interface ITemplateCacheService extends ICacheObject {}
 
     ///////////////////////////////////////////////////////////////////////////
     // SCEService
-    // see http://docs.angular.org/api/ng.$sce
+    // see http://data.angular.org/api/ng.$sce
     ///////////////////////////////////////////////////////////////////////////
     interface ISCEService {
         getTrusted(type: string, mayBeTrusted: any): any;
@@ -1516,7 +1516,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // SCEProvider
-    // see http://docs.angular.org/api/ng.$sceProvider
+    // see http://data.angular.org/api/ng.$sceProvider
     ///////////////////////////////////////////////////////////////////////////
     interface ISCEProvider extends IServiceProvider {
         enabled(value: boolean): void;
@@ -1524,7 +1524,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // SCEDelegateService
-    // see http://docs.angular.org/api/ng.$sceDelegate
+    // see http://data.angular.org/api/ng.$sceDelegate
     ///////////////////////////////////////////////////////////////////////////
     interface ISCEDelegateService {
         getTrusted(type: string, mayBeTrusted: any): any;
@@ -1535,7 +1535,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // SCEDelegateProvider
-    // see http://docs.angular.org/api/ng.$sceDelegateProvider
+    // see http://data.angular.org/api/ng.$sceDelegateProvider
     ///////////////////////////////////////////////////////////////////////////
     interface ISCEDelegateProvider extends IServiceProvider {
         resourceUrlBlacklist(blacklist: any[]): void;
@@ -1544,7 +1544,7 @@ declare module angular {
 
     /**
      * $templateRequest service
-     * see http://docs.angular.org/api/ng/service/$templateRequest
+     * see http://data.angular.org/api/ng/service/$templateRequest
      */
     interface ITemplateRequestService {
         /**
@@ -1572,8 +1572,8 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////////
     // Directive
-    // see http://docs.angular.org/api/ng.$compileProvider#directive
-    // and http://docs.angular.org/guide/directive
+    // see http://data.angular.org/api/ng.$compileProvider#directive
+    // and http://data.angular.org/guide/directive
     ///////////////////////////////////////////////////////////////////////////
 
     interface IDirectiveFactory {
@@ -1625,7 +1625,7 @@ declare module angular {
      * angular.element
      * when calling angular.element, angular returns a jQuery object,
      * augmented with additional methods like e.g. scope.
-     * see: http://docs.angular.org/api/angular.element
+     * see: http://data.angular.org/api/angular.element
      */
     interface IAugmentedJQueryStatic extends JQueryStatic {
         (selector: string, context?: any): IAugmentedJQuery;
@@ -1658,7 +1658,7 @@ declare module angular {
 
     ///////////////////////////////////////////////////////////////////////
     // AnimateService
-    // see http://docs.angular.org/api/ng.$animate
+    // see http://data.angular.org/api/ng.$animate
     ///////////////////////////////////////////////////////////////////////
     interface IAnimateService {
         addClass(element: JQuery, className: string, done?: Function): IPromise<any>;
@@ -1675,7 +1675,7 @@ declare module angular {
 
         ///////////////////////////////////////////////////////////////////////
         // InjectorService
-        // see http://docs.angular.org/api/AUTO.$injector
+        // see http://data.angular.org/api/AUTO.$injector
         ///////////////////////////////////////////////////////////////////////
         interface IInjectorService {
             annotate(fn: Function): string[];
@@ -1689,7 +1689,7 @@ declare module angular {
 
         ///////////////////////////////////////////////////////////////////////
         // ProvideService
-        // see http://docs.angular.org/api/AUTO.$provide
+        // see http://data.angular.org/api/AUTO.$provide
         ///////////////////////////////////////////////////////////////////////
         interface IProvideService {
             // Documentation says it returns the registered instance, but actual

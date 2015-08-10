@@ -24,7 +24,7 @@ declare module angular.resource {
 
     ///////////////////////////////////////////////////////////////////////////
     // ResourceService
-    // see http://docs.angular.org/api/ngResource.$resource
+    // see http://data.angular.org/api/ngResource.$resource
     // Most part of the following definitions were achieved by analyzing the
     // actual implementation, since the documentation doesn't seem to cover
     // that deeply.

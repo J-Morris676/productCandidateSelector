@@ -33,11 +33,18 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
 
-app.get("/api/docs/instances", function(req, res) {
+app.get("/api/data", function(req, res) {
+    logger.info("GET: Data Directory Names");
+
+    var files = fs.readdirSync(__dirname + "/data");
+    res.json(files);
+});
+
+app.get("/api/data/instances", function(req, res) {
     logger.info("GET: Instances");
 
     try {
-        var instances = JSON.parse(fs.readFileSync('docs/Instances.json', 'utf8'));
+        var instances = JSON.parse(fs.readFileSync('data/59340/Instances.json', 'utf8'));
         res.json(instances);
     }
     catch (e) {
@@ -46,11 +53,11 @@ app.get("/api/docs/instances", function(req, res) {
     }
 });
 
-app.get("/api/docs/relationships", function(req, res) {
+app.get("/api/data/relationships", function(req, res) {
     logger.info("GET: Relationships");
 
     try {
-        var relationships = JSON.parse(fs.readFileSync('docs/Relationships.json', 'utf8'));
+        var relationships = JSON.parse(fs.readFileSync('data/59340/Relationships.json', 'utf8'));
         res.json(relationships);
     }
     catch (e) {

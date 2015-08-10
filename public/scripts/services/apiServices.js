@@ -14,7 +14,7 @@ var app;
                 function InstancesService($http, $q) {
                     var _this = this;
                     this.getInstances = function () {
-                        return _this.$http.get("/api/docs/instances");
+                        return _this.$http.get("/api/data/instances");
                     };
                     this.$http = $http;
                     this.$q = $q;
@@ -26,7 +26,7 @@ var app;
                 function RelationshipsService($http, $q) {
                     var _this = this;
                     this.getRelationships = function () {
-                        return _this.$http.get("/api/docs/relationships");
+                        return _this.$http.get("/api/data/relationships");
                     };
                     this.$http = $http;
                     this.$q = $q;

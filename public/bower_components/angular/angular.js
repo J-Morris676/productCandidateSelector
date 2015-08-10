@@ -657,7 +657,7 @@ var trim = function(value) {
 };
 
 // Copied from:
-// http://docs.closure-library.googlecode.com/git/local_closure_goog_string_string.js.source.html#line1021
+// http://data.closure-library.googlecode.com/git/local_closure_goog_string_string.js.source.html#line1021
 // Prereq: s is a string.
 var escapeForRegexp = function(s) {
   return s.replace(/([-()\[\]{}+?*.$\^|,:#<!\\])/g, '\\$1').
@@ -2499,7 +2499,7 @@ function JQLite(element) {
   }
   if (!(this instanceof JQLite)) {
     if (argIsString && element.charAt(0) != '<') {
-      throw jqLiteMinErr('nosel', 'Looking up elements via selectors is not supported by jqLite! See: http://docs.angularjs.org/api/angular.element');
+      throw jqLiteMinErr('nosel', 'Looking up elements via selectors is not supported by jqLite! See: http://data.angularjs.org/api/angular.element');
     }
     return new JQLite(element);
   }
@@ -9196,10 +9196,10 @@ function $HttpProvider() {
      *    - **timeout** – `{number|Promise}` – timeout in milliseconds, or {@link ng.$q promise}
      *      that should abort the request when resolved.
      *    - **withCredentials** - `{boolean}` - whether to set the `withCredentials` flag on the
-     *      XHR object. See [requests with credentials](https://developer.mozilla.org/docs/Web/HTTP/Access_control_CORS#Requests_with_credentials)
+     *      XHR object. See [requests with credentials](https://developer.mozilla.org/data/Web/HTTP/Access_control_CORS#Requests_with_credentials)
      *      for more information.
      *    - **responseType** - `{string}` - see
-     *      [requestType](https://developer.mozilla.org/en-US/docs/DOM/XMLHttpRequest#responseType).
+     *      [requestType](https://developer.mozilla.org/en-US/data/DOM/XMLHttpRequest#responseType).
      *
      * @returns {HttpPromise} Returns a {@link ng.$q promise} object with the
      *   standard `then` method and two http specific methods: `success` and `error`. The `then`
@@ -10113,7 +10113,7 @@ function $InterpolateProvider() {
           throw $interpolateMinErr('noconcat',
               "Error while interpolating: {0}\nStrict Contextual Escaping disallows " +
               "interpolations that concatenate multiple expressions when a trusted value is " +
-              "required.  See http://docs.angularjs.org/api/ng.$sce", text);
+              "required.  See http://data.angularjs.org/api/ng.$sce", text);
       }
 
       if (!mustHaveExpression || expressions.length) {
@@ -11640,7 +11640,7 @@ var $parseMinErr = minErr('$parse');
 // Similarly we prevent invocations of function known to be dangerous, as well as assignments to
 // native objects.
 //
-// See https://docs.angularjs.org/guide/security
+// See https://data.angularjs.org/guide/security
 
 
 function ensureSafeMemberName(name, fullExpression) {
@@ -12725,7 +12725,7 @@ function $ParseProvider() {
       if (typeof newValue === 'object') {
 
         // attempt to convert the value to a primitive type
-        // TODO(docs): add a note to docs that by implementing valueOf even objects and arrays can
+        // TODO(data): add a note to data that by implementing valueOf even objects and arrays can
         //             be cheaply dirty-checked
         newValue = getValueOf(newValue);
 
@@ -12893,7 +12893,7 @@ function $ParseProvider() {
  *
  * The streamlined ES6 style promise is essentially just using $q as a constructor which takes a `resolver`
  * function as the first argument. This is similar to the native Promise implementation from ES6 Harmony,
- * see [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+ * see [MDN](https://developer.mozilla.org/en-US/data/Web/JavaScript/Reference/Global_Objects/Promise).
  *
  * While the constructor-style use is supported, not all of the supporting methods from ES6 Harmony promises are
  * available yet.
@@ -13728,7 +13728,7 @@ function $RootScopeProvider() {
        * - The `listener` is called only when the value from the current `watchExpression` and the
        *   previous call to `watchExpression` are not equal (with the exception of the initial run,
        *   see below). Inequality is determined according to reference inequality,
-       *   [strict comparison](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators)
+       *   [strict comparison](https://developer.mozilla.org/en-US/data/Web/JavaScript/Reference/Operators/Comparison_Operators)
        *    via the `!==` Javascript operator, unless `objectEquality == true`
        *   (see next point)
        * - When `objectEquality == true`, inequality of the `watchExpression` is determined
@@ -15428,10 +15428,10 @@ function $SceDelegateProvider() {
  *      the value.)  Do make use of your platform's escaping mechanism as it might be good
  *      enough before coding your own.  e.g. Ruby has
  *      [Regexp.escape(str)](http://www.ruby-doc.org/core-2.0.0/Regexp.html#method-c-escape)
- *      and Python has [re.escape](http://docs.python.org/library/re.html#re.escape).
+ *      and Python has [re.escape](http://data.python.org/library/re.html#re.escape).
  *      Javascript lacks a similar built in function for escaping.  Take a look at Google
  *      Closure library's [goog.string.regExpEscape(s)](
- *      http://docs.closure-library.googlecode.com/git/closure_goog_string_string.js.source.html#line962).
+ *      http://data.closure-library.googlecode.com/git/closure_goog_string_string.js.source.html#line962).
  *
  * Refer {@link ng.$sceDelegateProvider $sceDelegateProvider} for an example.
  *
@@ -15596,7 +15596,7 @@ function $SceProvider() {
       throw $sceMinErr('iequirks',
         'Strict Contextual Escaping does not support Internet Explorer version < 11 in quirks ' +
         'mode.  You can fix this by adding the text <!doctype html> to the top of your HTML ' +
-        'document.  See http://docs.angularjs.org/api/ng.$sce for more information.');
+        'document.  See http://data.angularjs.org/api/ng.$sce for more information.');
     }
 
     var sce = shallowCopy(SCE_CONTEXTS);
@@ -16304,7 +16304,7 @@ var originUrl = urlResolve(window.location.href);
  * method and IE < 8 is unsupported.
  *
  * References:
- *   http://developer.mozilla.org/en-US/docs/Web/API/HTMLAnchorElement
+ *   http://developer.mozilla.org/en-US/data/Web/API/HTMLAnchorElement
  *   http://www.aptana.com/reference/html/api/HTMLAnchorElement.html
  *   http://url.spec.whatwg.org/#urlutils
  *   https://github.com/angular/angular.js/pull/2902
@@ -16956,7 +16956,7 @@ function formatNumber(number, pattern, groupSep, decimalSep, fractionSize) {
 
     // safely round numbers in JS without hitting imprecisions of floating-point arithmetics
     // inspired by:
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
+    // https://developer.mozilla.org/en-US/data/Web/JavaScript/Reference/Global_Objects/Math/round
     number = +(Math.round(+(number.toString() + 'e' + fractionSize)).toString() + 'e' + -fractionSize);
 
     var fraction = ('' + number).split(DECIMAL_SEP);
@@ -19619,7 +19619,7 @@ function baseInputType(scope, element, attr, ctrl, $sniffer, $browser) {
 
   // In composition mode, users are still inputing intermediate text buffer,
   // hold the listener until composition is done.
-  // More about composition events: https://developer.mozilla.org/en-US/docs/Web/API/CompositionEvent
+  // More about composition events: https://developer.mozilla.org/en-US/data/Web/API/CompositionEvent
   if (!$sniffer.android) {
     var composing = false;
 
@@ -21778,7 +21778,7 @@ forEach(
  * @description
  * Specify custom behavior on blur event.
  *
- * A [blur event](https://developer.mozilla.org/en-US/docs/Web/Events/blur) fires when
+ * A [blur event](https://developer.mozilla.org/en-US/data/Web/Events/blur) fires when
  * an element has lost focus.
  *
  * Note: As the `blur` event is executed synchronously also during DOM manipulations

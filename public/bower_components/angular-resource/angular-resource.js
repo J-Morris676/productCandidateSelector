@@ -162,7 +162,7 @@ function shallowClearAndCopy(src, dst) {
  *     [requests with credentials](https://developer.mozilla.org/en/http_access_control#section_5)
  *     for more information.
  *   - **`responseType`** - `{string}` - see
- *     [requestType](https://developer.mozilla.org/en-US/docs/DOM/XMLHttpRequest#responseType).
+ *     [requestType](https://developer.mozilla.org/en-US/data/DOM/XMLHttpRequest#responseType).
  *   - **`interceptor`** - `{Object=}` - The interceptor object has two optional methods -
  *     `response` and `responseError`. Both `response` and `responseError` interceptors get called
  *     with `http response` object. See {@link ng.$http $http interceptors}.

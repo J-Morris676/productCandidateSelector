@@ -32,7 +32,7 @@ module.exports = function (grunt) {
 
   Object.keys(configBridge.paths).forEach(function (key) {
     configBridge.paths[key].forEach(function (val, i, arr) {
-      arr[i] = path.join('./docs/assets', val);
+      arr[i] = path.join('./data/assets', val);
     });
   });
 
@@ -52,7 +52,7 @@ module.exports = function (grunt) {
     // Task configuration.
     clean: {
       dist: 'dist',
-      docs: 'docs/dist'
+      docs: 'data/dist'
     },
 
     jshint: {
@@ -75,7 +75,7 @@ module.exports = function (grunt) {
         src: 'js/tests/unit/*.js'
       },
       assets: {
-        src: ['docs/assets/js/src/*.js', 'docs/assets/js/*.js', '!docs/assets/js/*.min.js']
+        src: ['data/assets/js/src/*.js', 'data/assets/js/*.js', '!data/assets/js/*.min.js']
       }
     },
 
@@ -138,11 +138,11 @@ module.exports = function (grunt) {
       },
       customize: {
         src: configBridge.paths.customizerJs,
-        dest: 'docs/assets/js/customize.min.js'
+        dest: 'data/assets/js/customize.min.js'
       },
       docsJs: {
         src: configBridge.paths.docsJs,
-        dest: 'docs/assets/js/docs.min.js'
+        dest: 'data/assets/js/data.min.js'
       }
     },
 
@@ -195,13 +195,13 @@ module.exports = function (grunt) {
         src: 'dist/css/<%= pkg.name %>-theme.css'
       },
       docs: {
-        src: ['docs/assets/css/src/docs.css']
+        src: ['data/assets/css/src/data.css']
       },
       examples: {
         expand: true,
-        cwd: 'docs/examples/',
+        cwd: 'data/examples/',
         src: ['**/*.css'],
-        dest: 'docs/examples/'
+        dest: 'data/examples/'
       }
     },
 
@@ -214,14 +214,14 @@ module.exports = function (grunt) {
         'dist/css/bootstrap-theme.css'
       ],
       examples: [
-        'docs/examples/**/*.css'
+        'data/examples/**/*.css'
       ],
       docs: {
         options: {
           ids: false,
           'overqualified-elements': false
         },
-        src: 'docs/assets/css/src/docs.css'
+        src: 'data/assets/css/src/data.css'
       }
     },
 
@@ -243,10 +243,10 @@ module.exports = function (grunt) {
       },
       docs: {
         src: [
-          'docs/assets/css/src/pygments-manni.css',
-          'docs/assets/css/src/docs.css'
+          'data/assets/css/src/pygments-manni.css',
+          'data/assets/css/src/data.css'
         ],
-        dest: 'docs/assets/css/docs.min.css'
+        dest: 'data/assets/css/data.min.css'
       }
     },
 
@@ -262,13 +262,13 @@ module.exports = function (grunt) {
       },
       examples: {
         expand: true,
-        cwd: 'docs/examples/',
+        cwd: 'data/examples/',
         src: '**/*.css',
-        dest: 'docs/examples/'
+        dest: 'data/examples/'
       },
       docs: {
-        src: 'docs/assets/css/src/docs.css',
-        dest: 'docs/assets/css/src/docs.css'
+        src: 'data/assets/css/src/data.css',
+        dest: 'data/assets/css/src/data.css'
       }
     },
 
@@ -284,7 +284,7 @@ module.exports = function (grunt) {
         src: [
           '**/*'
         ],
-        dest: 'docs/dist/'
+        dest: 'data/dist/'
       }
     },
 
@@ -335,12 +335,12 @@ module.exports = function (grunt) {
         data: getLessVarsData
       },
       customizerVars: {
-        src: 'docs/_jade/customizer-variables.jade',
-        dest: 'docs/_includes/customizer-variables.html'
+        src: 'data/_jade/customizer-variables.jade',
+        dest: 'data/_includes/customizer-variables.html'
       },
       customizerNav: {
-        src: 'docs/_jade/customizer-nav.jade',
-        dest: 'docs/_includes/nav/customize.html'
+        src: 'data/_jade/customizer-nav.jade',
+        dest: 'data/_includes/nav/customize.html'
       }
     },
 
@@ -379,7 +379,7 @@ module.exports = function (grunt) {
         replacement: grunt.option('newver'),
         exclude: [
           'dist/fonts',
-          'docs/assets',
+          'data/assets',
           'fonts',
           'js/tests/vendor',
           'node_modules',
@@ -505,11 +505,11 @@ module.exports = function (grunt) {
   });
 
   // Docs task.
-  grunt.registerTask('docs-css', ['autoprefixer:docs', 'autoprefixer:examples', 'csscomb:docs', 'csscomb:examples', 'cssmin:docs']);
-  grunt.registerTask('lint-docs-css', ['csslint:docs', 'csslint:examples']);
-  grunt.registerTask('docs-js', ['uglify:docsJs', 'uglify:customize']);
-  grunt.registerTask('lint-docs-js', ['jshint:assets', 'jscs:assets']);
-  grunt.registerTask('docs', ['docs-css', 'lint-docs-css', 'docs-js', 'lint-docs-js', 'clean:docs', 'copy:docs', 'build-glyphicons-data', 'build-customizer']);
+  grunt.registerTask('data-css', ['autoprefixer:docs', 'autoprefixer:examples', 'csscomb:docs', 'csscomb:examples', 'cssmin:docs']);
+  grunt.registerTask('lint-data-css', ['csslint:docs', 'csslint:examples']);
+  grunt.registerTask('data-js', ['uglify:docsJs', 'uglify:customize']);
+  grunt.registerTask('lint-data-js', ['jshint:assets', 'jscs:assets']);
+  grunt.registerTask('docs', ['data-css', 'lint-data-css', 'data-js', 'lint-data-js', 'clean:docs', 'copy:docs', 'build-glyphicons-data', 'build-customizer']);
 
   grunt.registerTask('prep-release', ['dist', 'docs', 'jekyll:github', 'htmlmin', 'compress']);
 

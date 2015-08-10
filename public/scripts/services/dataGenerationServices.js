@@ -34,15 +34,11 @@ var app;
                     if (instanceMeta.ElementHierarchy.indexOf("Launch_Entity") != -1) {
                         this.nameNodeForLaunchEntity(node, instanceData.Name);
                         node.groupCardinality = this.findGroupCardinality(children);
-                        //TODO: This logs any nodes that have Group Cardinality, remove when finished:
-                        if (node.groupCardinality != null) {
-                            console.log(node);
-                        }
                     }
                     else if (instanceMeta.ElementKind == "TSpecCharUse") {
                         node.text = instanceData.Description;
                         node.cardinality = {
-                            max: instanceData.Max_Occurs,
+                            max: instanceData.Max_Occurs || "1",
                             min: instanceData.Min_Occurs
                         };
                     }
