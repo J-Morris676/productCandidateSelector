@@ -9,11 +9,8 @@
 
 var appModule = angular.module("app", ['ngResource']);
 
-appModule.service("instancesService", [ "$http", "$q", ($http, $q)
-    => new app.services.apiServices.InstancesService($http, $q) ]);
-
-appModule.service("relationshipsService", [ "$http", "$q", ($http, $q)
-    => new app.services.apiServices.RelationshipsService($http, $q) ]);
+appModule.service("getService", [ "$http", "$q", ($http, $q)
+    => new app.services.apiServices.GetService($http, $q) ]);
 
 appModule.service("exportService", [ "$http", "$q", ($http, $q)
     => new app.services.apiServices.exportService($http, $q) ]);
@@ -28,9 +25,9 @@ appModule.filter("nameByElementKindFilter", ()
     => app.filters.nameByElementKindFilter());
 
 appModule.controller("selectController",
-    ["$scope", "instancesService", "relationshipsService", "specificationDataGenerationService", "$filter",
-    ($scope, instancesService, relationshipsService, specificationDataGenerationService, $filter)
-    => new app.controllers.selectController($scope, instancesService, relationshipsService, specificationDataGenerationService, $filter)]);
+    ["$scope", "getService", "specificationDataGenerationService", "$filter",
+    ($scope, getService, specificationDataGenerationService, $filter)
+    => new app.controllers.selectController($scope, getService, specificationDataGenerationService, $filter)]);
 
 
 appModule.directive("specificationTree", ()

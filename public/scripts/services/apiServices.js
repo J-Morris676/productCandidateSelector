@@ -10,30 +10,24 @@ var app;
         var apiServices;
         (function (apiServices) {
             'use strict';
-            var InstancesService = (function () {
-                function InstancesService($http, $q) {
+            var GetService = (function () {
+                function GetService($http, $q) {
                     var _this = this;
-                    this.getInstances = function () {
-                        return _this.$http.get("/api/data/59340/instances");
+                    this.datasets = function () {
+                        return _this.$http.get("/api/data");
+                    };
+                    this.instances = function (storyNo) {
+                        return _this.$http.get("/api/data/" + storyNo + "/instances");
+                    };
+                    this.relationships = function (storyNo) {
+                        return _this.$http.get("/api/data/" + storyNo + "/relationships");
                     };
                     this.$http = $http;
                     this.$q = $q;
                 }
-                return InstancesService;
+                return GetService;
             })();
-            apiServices.InstancesService = InstancesService;
-            var RelationshipsService = (function () {
-                function RelationshipsService($http, $q) {
-                    var _this = this;
-                    this.getRelationships = function () {
-                        return _this.$http.get("/api/data/59340/relationships");
-                    };
-                    this.$http = $http;
-                    this.$q = $q;
-                }
-                return RelationshipsService;
-            })();
-            apiServices.RelationshipsService = RelationshipsService;
+            apiServices.GetService = GetService;
             var exportService = (function () {
                 function exportService($http, $q) {
                     var _this = this;

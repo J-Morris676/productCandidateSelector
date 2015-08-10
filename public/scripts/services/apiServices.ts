@@ -9,7 +9,7 @@
 module app.services.apiServices {
     'use strict';
 
-    export class InstancesService
+    export class GetService
     {
         $http:ng.IHttpService;
         $q:ng.IQService;
@@ -20,25 +20,19 @@ module app.services.apiServices {
             this.$q = $q;
         }
 
-        getInstances = ():ng.IPromise<data.IInstances> =>
-        {
-            return this.$http.get("/api/data/59340/instances")
-        };
-    }
-
-    export class RelationshipsService
-    {
-        $http:ng.IHttpService;
-        $q:ng.IQService;
-
-        constructor($http:ng.IHttpService, $q:ng.IQService) {
-            this.$http = $http;
-            this.$q = $q;
+        datasets = (): ng.IPromise<string[]> => {
+            return this.$http.get("/api/data");
         }
 
-        getRelationships = ():ng.IPromise<data.IRelationships> => {
-            return this.$http.get("/api/data/59340/relationships")
+        instances = (storyNo: string):ng.IPromise<data.IInstances> =>
+        {
+            return this.$http.get("/api/data/" + storyNo + "/instances")
         };
+
+        relationships = (storyNo: string):ng.IPromise<data.IRelationships> => {
+            return this.$http.get("/api/data/" + storyNo + "/relationships")
+        };
+
     }
 
     export class exportService

@@ -8,6 +8,8 @@
         <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="bower_components/jstree/dist/themes/default/style.css" rel="stylesheet">
 
+        <link href="styles/loader.css" rel="stylesheet">
+
         <link href="styles/icons.css" rel="stylesheet" />
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -24,7 +26,32 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <form class="form-inline">
+                                        <div class="form-group">
+                                            <label for="dataset-select">Select Dataset: </label>
+                                            <select id="dataset-select" ng-change="events.updateDataset()" data-ng-options="story for story in stories" data-ng-model="selectedStory" class="form-control">
+                                            </select>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div ng-show="instances==null" class="row">
+                                <div class="col-sm-1 col-md-1 col-md-1 col-lg-1">
+                                    <div class="loader">Loading...</div>
+                                </div>
+                            </div>
 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" data-ng-show="instances!=null&&relationships!=null">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
                             <div class="row">
                                 <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                                     <select ng-change="events.updateNameDropDown()" ng-init="elementKindGuid=null" data-ng-model="elementKindGuid" class="form-control">
@@ -48,18 +75,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div ng-show="specificationTree" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                <div class="well">
-                                    <specification-tree selected-candidate-node="selectedCandidateNode" selected-sub-tree="candidateTree" data="specificationTree"></specification-tree>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div ng-show="specificationTree" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <div class="well">
+                            <specification-tree selected-candidate-node="selectedCandidateNode" selected-sub-tree="candidateTree" data="specificationTree"></specification-tree>
+                        </div>
+                    </div>
 
-                            <div ng-show="candidateTree" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                <div class="well">
-                                    <candidate-tree relationships="relationships" selected-node="selectedCandidateNode" data="candidateTree"></candidate-tree>
-                                </div>
-                            </div>
+                    <div ng-show="candidateTree" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <div class="well">
+                            <candidate-tree relationships="relationships" selected-node="selectedCandidateNode" data="candidateTree"></candidate-tree>
                         </div>
                     </div>
                 </div>
@@ -76,7 +103,6 @@
         <script src="bower_components/lodash/lodash.min.js"></script>
 
         <script src="bower_components/bootstrap/js/dropdown.js"></script>
-
 
         <script src="scripts/app.js"></script>
 

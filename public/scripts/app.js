@@ -6,11 +6,8 @@
 /// <reference path="directives/specificationTree/specificationTree.ts" />
 /// <reference path="directives/candidateTree/candidateTree.ts" />
 var appModule = angular.module("app", ['ngResource']);
-appModule.service("instancesService", ["$http", "$q", function ($http, $q) {
-        return new app.services.apiServices.InstancesService($http, $q);
-    }]);
-appModule.service("relationshipsService", ["$http", "$q", function ($http, $q) {
-        return new app.services.apiServices.RelationshipsService($http, $q);
+appModule.service("getService", ["$http", "$q", function ($http, $q) {
+        return new app.services.apiServices.GetService($http, $q);
     }]);
 appModule.service("exportService", ["$http", "$q", function ($http, $q) {
         return new app.services.apiServices.exportService($http, $q);
@@ -24,9 +21,9 @@ appModule.filter("elementKindUniqueFilter", function () {
 appModule.filter("nameByElementKindFilter", function () {
     return app.filters.nameByElementKindFilter();
 });
-appModule.controller("selectController", ["$scope", "instancesService", "relationshipsService", "specificationDataGenerationService", "$filter",
-    function ($scope, instancesService, relationshipsService, specificationDataGenerationService, $filter) {
-        return new app.controllers.selectController($scope, instancesService, relationshipsService, specificationDataGenerationService, $filter);
+appModule.controller("selectController", ["$scope", "getService", "specificationDataGenerationService", "$filter",
+    function ($scope, getService, specificationDataGenerationService, $filter) {
+        return new app.controllers.selectController($scope, getService, specificationDataGenerationService, $filter);
     }]);
 appModule.directive("specificationTree", function () {
     return new app.directives.specificationTree.specificationTree();

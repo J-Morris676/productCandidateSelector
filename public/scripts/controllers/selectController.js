@@ -8,10 +8,15 @@ var app;
     (function (controllers) {
         'use strict';
         var selectController = (function () {
-            function selectController($scope, instanceService, relationshipService, specificationDataGenerationService, $filter) {
+            function selectController($scope, getService, specificationDataGenerationService, $filter) {
                 var _this = this;
                 this.errorHandler = function (error) {
                     console.log(error);
+                };
+                this.assignDatasetResponse = function (stories) {
+                    _this.$scope.stories = stories;
+                    _this.$scope.selectedStory = stories[0];
+                    _this.updateDataset();
                 };
                 this.assignInstancesResponse = function (instances) {
                     _this.$scope.instances = instances;
@@ -31,14 +36,15 @@ var app;
                 this.$scope = $scope;
                 this.specificationDataGenerationService = specificationDataGenerationService;
                 this.$filter = $filter;
-                instanceService.getInstances()
-                    .success(this.assignInstancesResponse)
-                    .error(this.errorHandler);
-                relationshipService.getRelationships()
-                    .success(this.assignRelationshipsResponse)
-                    .error(this.errorHandler);
+                this.getService = getService;
+                this.getService.datasets().success(this.assignDatasetResponse).error(this.errorHandler);
                 $scope.events = this;
             }
+            selectController.prototype.updateDataset = function () {
+                this.$scope.instances = null;
+                this.getService.instances(this.$scope.selectedStory).success(this.assignInstancesResponse).error(this.errorHandler);
+                this.getService.relationships(this.$scope.selectedStory).success(this.assignRelationshipsResponse).error(this.errorHandler);
+            };
             return selectController;
         })();
         controllers.selectController = selectController;

@@ -25,6 +25,9 @@ module app.controllers {
         events: selectController;
 
         candidateTree: data.IInstanceNode;
+
+        selectedStory: string;
+        stories: string[];
     }
 
     export class selectController
@@ -32,27 +35,43 @@ module app.controllers {
         $scope:ISelectScope;
         $filter: any;
         specificationDataGenerationService: any;
+        getService: any;
 
-        constructor($scope:ISelectScope, instanceService, relationshipService, specificationDataGenerationService, $filter)
+        constructor($scope:ISelectScope, getService, specificationDataGenerationService, $filter)
         {
             this.$scope = $scope;
             this.specificationDataGenerationService = specificationDataGenerationService;
             this.$filter = $filter;
+            this.getService = getService;
 
-            instanceService.getInstances()
-                .success(this.assignInstancesResponse)
-                .error(this.errorHandler);
-
-            relationshipService.getRelationships()
-                .success(this.assignRelationshipsResponse)
+            this.getService.datasets()
+                .success(this.assignDatasetResponse)
                 .error(this.errorHandler);
 
             $scope.events = this;
         }
 
+        updateDataset() {
+            this.$scope.instances = null;
+            this.getService.instances(this.$scope.selectedStory)
+                .success(this.assignInstancesResponse)
+                .error(this.errorHandler);
+
+            this.getService.relationships(this.$scope.selectedStory)
+                .success(this.assignRelationshipsResponse)
+                .error(this.errorHandler);
+        }
+
         errorHandler = (error: any):  void =>
         {
             console.log(error);
+        };
+
+        assignDatasetResponse = (stories: string[]): void =>
+        {
+            this.$scope.stories = stories;
+            this.$scope.selectedStory = stories[0];
+            this.updateDataset();
         };
 
         assignInstancesResponse = (instances: data.IInstances): void =>
