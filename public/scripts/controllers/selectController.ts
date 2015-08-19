@@ -51,8 +51,10 @@ module app.controllers {
             $scope.events = this;
         }
 
-        updateDataset() {
-            this.$scope.instances = null;
+        updateDataset()
+        {
+            this.clearTreeSelectionVariables();
+
             this.getService.instances(this.$scope.selectedStory)
                 .success(this.assignInstancesResponse)
                 .error(this.errorHandler);
@@ -61,6 +63,15 @@ module app.controllers {
                 .success(this.assignRelationshipsResponse)
                 .error(this.errorHandler);
         }
+
+        clearTreeSelectionVariables = (): void =>
+        {
+            this.$scope.instances = null;
+            this.$scope.elementKindGuid = null;
+            this.$scope.elementNameAndGuid = null;
+            this.$scope.candidateTree = null;
+            this.$scope.specificationTree = null;
+        };
 
         errorHandler = (error: any):  void =>
         {

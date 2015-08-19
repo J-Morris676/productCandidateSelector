@@ -58,12 +58,11 @@ var app;
                             scope.selectedNode = null;
                             candidateTreeElement.jstree("destroy");
                             candidateTreeElement.jstree({ 'core': {
-                                    'multiple': false,
-                                    'data': [
-                                        scope.data
-                                    ]
-                                }
-                            }).on('loaded.jstree', function () {
+                                'multiple': false,
+                                'data': [
+                                    scope.data
+                                ]
+                            } }).on('loaded.jstree', function () {
                                 candidateTreeElement.jstree('open_all');
                                 candidateTreeElement.find(".jstree-leaf").each(function () {
                                     initCharacteristicNode($(this).closest("li"));
@@ -228,9 +227,7 @@ var app;
                                     }
                                 }
                                 else {
-                                    throw new Error("Error: '" + treeNode.text + "' is not between cardinality\n"
-                                        + "Cardinality: " + treeNode.cardinality.max + ":" + treeNode.cardinality.min + "\n"
-                                        + "Characteristic values: " + CharacteristicUse.Value.length);
+                                    throw new Error("Error: '" + treeNode.text + "' is not between cardinality\n" + "Cardinality: " + treeNode.cardinality.max + ":" + treeNode.cardinality.min + "\n" + "Characteristic values: " + CharacteristicUse.Value.length);
                                 }
                                 return null;
                             }

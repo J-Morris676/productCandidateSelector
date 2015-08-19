@@ -10,6 +10,13 @@ var app;
         var selectController = (function () {
             function selectController($scope, getService, specificationDataGenerationService, $filter) {
                 var _this = this;
+                this.clearTreeSelectionVariables = function () {
+                    _this.$scope.instances = null;
+                    _this.$scope.elementKindGuid = null;
+                    _this.$scope.elementNameAndGuid = null;
+                    _this.$scope.candidateTree = null;
+                    _this.$scope.specificationTree = null;
+                };
                 this.errorHandler = function (error) {
                     console.log(error);
                 };
@@ -41,7 +48,7 @@ var app;
                 $scope.events = this;
             }
             selectController.prototype.updateDataset = function () {
-                this.$scope.instances = null;
+                this.clearTreeSelectionVariables();
                 this.getService.instances(this.$scope.selectedStory).success(this.assignInstancesResponse).error(this.errorHandler);
                 this.getService.relationships(this.$scope.selectedStory).success(this.assignRelationshipsResponse).error(this.errorHandler);
             };

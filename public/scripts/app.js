@@ -6,29 +6,12 @@
 /// <reference path="directives/specificationTree/specificationTree.ts" />
 /// <reference path="directives/candidateTree/candidateTree.ts" />
 var appModule = angular.module("app", ['ngResource']);
-appModule.service("getService", ["$http", "$q", function ($http, $q) {
-        return new app.services.apiServices.GetService($http, $q);
-    }]);
-appModule.service("exportService", ["$http", "$q", function ($http, $q) {
-        return new app.services.apiServices.exportService($http, $q);
-    }]);
-appModule.service("specificationDataGenerationService", [function () {
-        return new app.services.dataGenerationServices.specificationTreeDataGenerationService();
-    }]);
-appModule.filter("elementKindUniqueFilter", function () {
-    return app.filters.elementKindUniqueFilter();
-});
-appModule.filter("nameByElementKindFilter", function () {
-    return app.filters.nameByElementKindFilter();
-});
-appModule.controller("selectController", ["$scope", "getService", "specificationDataGenerationService", "$filter",
-    function ($scope, getService, specificationDataGenerationService, $filter) {
-        return new app.controllers.selectController($scope, getService, specificationDataGenerationService, $filter);
-    }]);
-appModule.directive("specificationTree", function () {
-    return new app.directives.specificationTree.specificationTree();
-});
-appModule.directive("candidateTree", function (exportService) {
-    return new app.directives.candidateTree.CandidateTree(exportService);
-});
+appModule.service("getService", ["$http", "$q", function ($http, $q) { return new app.services.apiServices.GetService($http, $q); }]);
+appModule.service("exportService", ["$http", "$q", function ($http, $q) { return new app.services.apiServices.exportService($http, $q); }]);
+appModule.service("specificationDataGenerationService", [function () { return new app.services.dataGenerationServices.specificationTreeDataGenerationService(); }]);
+appModule.filter("elementKindUniqueFilter", function () { return app.filters.elementKindUniqueFilter(); });
+appModule.filter("nameByElementKindFilter", function () { return app.filters.nameByElementKindFilter(); });
+appModule.controller("selectController", ["$scope", "getService", "specificationDataGenerationService", "$filter", function ($scope, getService, specificationDataGenerationService, $filter) { return new app.controllers.selectController($scope, getService, specificationDataGenerationService, $filter); }]);
+appModule.directive("specificationTree", function () { return new app.directives.specificationTree.specificationTree(); });
+appModule.directive("candidateTree", function (exportService) { return new app.directives.candidateTree.CandidateTree(exportService); });
 //# sourceMappingURL=app.js.map

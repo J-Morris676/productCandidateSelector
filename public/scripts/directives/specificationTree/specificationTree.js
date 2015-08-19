@@ -9,7 +9,7 @@ var app;
     var directives;
     (function (directives) {
         var specificationTree;
-        (function (specificationTree_1) {
+        (function (_specificationTree) {
             'use strict';
             var specificationTree = (function () {
                 function specificationTree() {
@@ -51,20 +51,16 @@ var app;
                     function renderTreeAndRegisterEvents() {
                         $($(element)).find("#spec-tree").jstree("destroy");
                         $($(element)).find("#spec-tree").jstree({ 'core': {
-                                'data': [
-                                    scope.data
-                                ]
-                            }
-                        });
+                            'data': [
+                                scope.data
+                            ]
+                        } });
                         $($(element)).find("#spec-tree").on('select_node.jstree', setSelectedNode);
                     }
                     function prePopulateSubTreeWithValidChildren(children) {
                         var childrenToPrePopulateWith = [];
                         for (var childIndex = 0; childIndex < children.length; childIndex++) {
-                            if ((InstanceTreeUtilities.isLaunchEntity(children[childIndex])
-                                && InstanceTreeUtilities.isOneToOneCardinality(children[childIndex]))
-                                || InstanceTreeUtilities.isCharacteristicNode(children[childIndex])
-                                || InstanceTreeUtilities.isUDCNode(children[childIndex])) {
+                            if ((InstanceTreeUtilities.isLaunchEntity(children[childIndex]) && InstanceTreeUtilities.isOneToOneCardinality(children[childIndex])) || InstanceTreeUtilities.isCharacteristicNode(children[childIndex]) || InstanceTreeUtilities.isUDCNode(children[childIndex])) {
                                 var addedChild = _.clone(children[childIndex]);
                                 addedChild.children = [];
                                 addedChild.nodeGuid = InstanceTreeUtilities.generateRandomNodeId();
@@ -98,8 +94,7 @@ var app;
                         }
                         var specificationParent = InstanceTreeUtilities.findNodeInTreeByGuid(scope.data, scope.selectedCandidateNode.guid);
                         if (InstanceTreeUtilities.isParentOfNode(specificationParent, scope.selectedSpecificationNode)) {
-                            if (InstanceTreeUtilities.isBetweenCardinality(scope.selectedCandidateNode, scope.selectedSpecificationNode)
-                                && InstanceTreeUtilities.isLowerThanMaxGroupCardinality(scope.selectedCandidateNode)) {
+                            if (InstanceTreeUtilities.isBetweenCardinality(scope.selectedCandidateNode, scope.selectedSpecificationNode) && InstanceTreeUtilities.isLowerThanMaxGroupCardinality(scope.selectedCandidateNode)) {
                                 return true;
                             }
                         }
@@ -116,7 +111,7 @@ var app;
                 };
                 return specificationTree;
             })();
-            specificationTree_1.specificationTree = specificationTree;
+            _specificationTree.specificationTree = specificationTree;
         })(specificationTree = directives.specificationTree || (directives.specificationTree = {}));
     })(directives = app.directives || (app.directives = {}));
 })(app || (app = {}));
