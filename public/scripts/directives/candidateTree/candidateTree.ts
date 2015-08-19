@@ -215,7 +215,10 @@ module app.directives.candidateTree {
             function generateTransformedTreeForExport(treeNode: any, parentNode:data.ICandidateExportNode): data.ICandidateExportNode {
 
                 if (InstanceTreeUtilities.isUDCNode(treeNode)) {
-                    if (treeNode.children[0].value == null) {
+                    if (treeNode.children.length == 0 ) {
+                        return null;
+                    }
+                    else if (treeNode.children[0].value == null) {
                         throw new Error("Error: UDC '" + treeNode.text + "' has not been set a value\n");
                     }
                     else {
