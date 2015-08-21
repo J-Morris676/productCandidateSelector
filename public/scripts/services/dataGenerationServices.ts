@@ -36,6 +36,11 @@ module app.services.dataGenerationServices {
                 elementHierarchy: instanceMeta.ElementHierarchy
             };
 
+            if (instanceData.Business_ID != null)
+                node.BUID = instanceData.Business_ID;
+            if (instanceData.SchemaElementGuid != null)
+                node.schemaElementGuid = instanceData.SchemaElementGuid;
+
             if (instanceMeta.ElementHierarchy.indexOf("Launch_Entity") != -1) {
                 this.nameNodeForLaunchEntity(node, instanceData.Name);
                 node.groupCardinality = this.findGroupCardinality(children);
@@ -54,6 +59,9 @@ module app.services.dataGenerationServices {
                 node.text = instanceData.Value;
             }
             else if (instanceMeta.ElementKind == "TUserDefinedCharacteristicValue") {
+                node.text = instanceData.Name;
+            }
+            else if (instanceMeta.ElementKind == "TSpecChar") {
                 node.text = instanceData.Name;
             }
 

@@ -120,6 +120,19 @@ module InstanceTreeUtilities {
         return null;
     }
 
+    export function flattenTreeIntoArray(treeRoot: data.IInstanceNode): Array<data.IInstanceNode> {
+        var flattenedArray: Array<data.IInstanceNode> = [];
+
+        flattenedArray.push(treeRoot);
+
+        for (var childIdx = 0; childIdx < treeRoot.children.length; childIdx++) {
+            var childIndexes: Array<data.IInstanceNode> = flattenTreeIntoArray(treeRoot.children[childIdx]);
+            flattenedArray = flattenedArray.concat(childIndexes);
+        }
+
+        return flattenedArray;
+    }
+
     /*
         Candidate Tree usage
      */

@@ -50,8 +50,17 @@ module app.services.apiServices {
         };
 
         downloadCandidateFile = (candidateId: number, format: string):void => {
-            var downloadFrame = document.getElementById('download-frame');
+            var downloadFrame = document.getElementById('candidate-download-frame');
             downloadFrame.setAttribute("src", "/api/candidateTrees/" + candidateId + "?format=" + format)
+        };
+
+        postAliases = (aliases: data.IAliases):ng.IPromise<any> => {
+            return this.$http.post("/api/aliases", aliases)
+        };
+
+        downloadAliasesFile = (aliasId: number):void => {
+            var downloadFrame = document.getElementById('aliases-download-frame');
+            downloadFrame.setAttribute("src", "/api/aliases/" + aliasId)
         };
     }
 }

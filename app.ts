@@ -28,6 +28,9 @@ var logger = log4js.getLogger('miniProject');
 var candidateTrees = {};
 var candidateTreeCount = 0;
 
+var aliases = {};
+var aliasesCount = 0;
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -66,6 +69,27 @@ app.get("/api/data/:storyNo/relationships", function(req, res) {
     }
 });
 
+app.post("/api/aliases", function(req, res) {
+    logger.info("POST: Saving Alias");
+
+    var ID = ++aliasesCount;
+    aliases[aliasesCount.toString()] = req.body;
+
+    res.json({
+        "ID": ID
+    })
+});
+
+app.get("/api/aliases/:ID", function(req, res) {
+    logger.info("GET: Aliases " + req.params.ID);
+
+    res.setHeader("Content-Disposition", "attachment; filename=\"Aliases.json\"");
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(aliases[req.params.ID], null, 2));
+
+    delete aliases[req.params.ID];
+});
+
 app.post("/api/candidateTrees", function(req, res) {
     logger.info("POST: Saving Candidate Tree");
 
@@ -93,5 +117,7 @@ app.get("/api/candidateTrees/:ID", function(req, res) {
 
     delete candidateTrees[req.params.ID];
 });
+
+
 
 app.listen(3000);

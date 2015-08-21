@@ -4,7 +4,7 @@
 
 /// <reference path="../modules/InstanceTreeUtilities.ts" />
 
-module app.controllers {
+module app.controllers.select {
     'use strict';
 
     interface ISelectScope extends ng.IScope
@@ -36,13 +36,15 @@ module app.controllers {
         $filter: any;
         specificationDataGenerationService: any;
         getService: any;
+        $modal: any;
 
-        constructor($scope:ISelectScope, getService, specificationDataGenerationService, $filter)
+        constructor($scope:ISelectScope, getService, specificationDataGenerationService, $filter, $modal)
         {
             this.$scope = $scope;
             this.specificationDataGenerationService = specificationDataGenerationService;
             this.$filter = $filter;
             this.getService = getService;
+            this.$modal = $modal;
 
             this.getService.datasets()
                 .success(this.assignDatasetResponse)
@@ -99,6 +101,21 @@ module app.controllers {
         updateNameDropDown = (): void =>
         {
             this.$scope.elementNames = this.$filter('nameByElementKindFilter')(this.$scope.instances, this.$scope.elementKinds[this.$scope.elementKindGuid]);
+        };
+
+        openAliasModal = (): void => {
+            var specificationTree = this.$scope.specificationTree;
+
+            this.$modal.open({
+                templateUrl: 'scripts/controllers/aliasModalInstanceController/aliasModalInstanceTpl.html',
+                controller: 'aliasModalInstanceController',
+                size: 'lg',
+                resolve: {
+                    rootNode: function () {
+                        return specificationTree;
+                    }
+                }
+            });
         };
 
         drawGraph = (): void =>

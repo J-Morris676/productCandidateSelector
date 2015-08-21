@@ -36,6 +36,9 @@
                                         </div>
                                     </form>
                                 </div>
+                                <div data-ng-hide="specificationTree == null" class="col-lg-offset-7 col-lg-2">
+                                    <button ng-click="events.openAliasModal()" class="btn">Aliases</button>
+                                </div>
                             </div>
                             <div ng-show="instances==null" class="row">
                                 <div class="col-sm-1 col-md-1 col-md-1 col-lg-1">
@@ -77,26 +80,32 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div ng-show="specificationTree" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <div class="well">
-                            <specification-tree selected-candidate-node="selectedCandidateNode" selected-sub-tree="candidateTree" data="specificationTree"></specification-tree>
-                        </div>
-                    </div>
+                <div ng-show="specificationTree && candidateTree" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="panel panel-default">
+                        <div  class="panel-body">
+                            <div class="row">
+                                <div ng-show="specificationTree"  class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                    <specification-tree selected-candidate-node="selectedCandidateNode" selected-sub-tree="candidateTree" data="specificationTree"></specification-tree>
+                                </div>
 
-                    <div ng-show="candidateTree" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <div class="well">
-                            <candidate-tree relationships="relationships" selected-node="selectedCandidateNode" data="candidateTree"></candidate-tree>
+                                <div ng-show="candidateTree" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                    <candidate-tree relationships="relationships" selected-node="selectedCandidateNode" data="candidateTree"></candidate-tree>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <iframe id="download-frame" style="display:none;"></iframe>
+
+        <iframe id="candidate-download-frame" style="display:none;"></iframe>
+        <iframe id="aliases-download-frame" style="display:none;"></iframe>
         <script src="bower_components/angular/angular.min.js"></script>
         <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+        <script src="bower_components/angular-animate/angular-animate.min.js"></script>
 
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/jstree/dist/jstree.min.js"></script>
@@ -114,6 +123,7 @@
 
         <script src="scripts/filters/selectFilters.js"></script>
         <script src="scripts/controllers/selectController.js"></script>
+        <script src="scripts/controllers/aliasModalInstanceController/aliasModalInstanceController.js"></script>
         <script src="scripts/directives/specificationTree/specificationTree.js"></script>
         <script src="scripts/directives/candidateTree/candidateTree.js"></script>
     </body>
