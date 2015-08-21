@@ -5,26 +5,26 @@
 <div class="modal-body">
     <table class="table" style="margin-bottom:0px;table-layout:fixed">
         <thead>
-        <tr>
-            <th>GUID</th>
-            <th>Type</th>
-            <th>Alias</th>
-            <th style="width:50px;"></th>
-        </tr>
+            <tr>
+                <th>GUID</th>
+                <th>Type</th>
+                <th>Alias</th>
+                <th style="width:50px;"></th>
+            </tr>
         </thead>
     </table>
 
     <div style="overflow-y:auto;height:350px;">
         <table class="table table-condensed" style="table-layout:fixed">
             <tbody>
-                <tr ng-repeat="node in nodesInTree track by $index">
+                <tr ng-repeat="node in nodesInTree | orderBy:'type'">
                     <td style="padding-top:10px;font-size: 10px;">{{node.guid}}</td>
                     <td style="padding-top:10px;font-size: 10px;">{{node.type}}</td>
                     <td>
                         <input style="font-size: 10px;" ng-model="node.text" class="form-control">
                     </td>
                     <td style="width:50px;">
-                        <span title="Remove from aliases" data-ng-click="events.removeFromArrayAndAliases($index)" style="cursor:pointer;color:red" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span title="Remove from aliases" data-ng-click="events.removeFromArray($index)" style="cursor:pointer;color:red" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </td>
                 </tr>
             </tbody>
@@ -33,6 +33,7 @@
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="events.downloadAliases()">Download</button>
-    <button class="btn btn-primary" type="button" ng-click="events.cancel()">Cancel</button>
+    <span style="font-size: 13px;margin-right:5px;">{{nodesInTree.length}} Aliases</span>
+    <button class="btn btn-info" type="button" ng-click="events.downloadAliases()">Download</button>
+    <button class="btn btn-primary" type="button" ng-click="events.updateAliasesAndClose()">Update</button>
 </div>

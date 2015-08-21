@@ -26,9 +26,9 @@ appModule.filter("nameByElementKindFilter", ()
     => app.filters.nameByElementKindFilter());
 
 appModule.controller("aliasModalInstanceController",
-    ["$scope", "$modalInstance", "rootNode", "exportService",
-        ($scope, $modalInstance, rootNode, exportService)
-            => new app.controllers.modalInstance.aliasModalInstanceController($scope, $modalInstance, rootNode, exportService)]);
+    ["$scope", "$modalInstance", "rootNode", "aliases", "exportService",
+        ($scope, $modalInstance, rootNode, aliases, exportService)
+            => new app.controllers.modalInstance.aliasModalInstanceController($scope, $modalInstance, rootNode, aliases, exportService)]);
 
 appModule.controller("selectController",
     ["$scope", "getService", "specificationDataGenerationService", "$filter", "$modal",

@@ -25,6 +25,7 @@ module app.controllers.select {
         events: selectController;
 
         candidateTree: data.IInstanceNode;
+        aliases: {};
 
         selectedStory: string;
         stories: string[];
@@ -73,6 +74,7 @@ module app.controllers.select {
             this.$scope.elementNameAndGuid = null;
             this.$scope.candidateTree = null;
             this.$scope.specificationTree = null;
+            this.$scope.aliases = null;
         };
 
         errorHandler = (error: any):  void =>
@@ -104,18 +106,27 @@ module app.controllers.select {
         };
 
         openAliasModal = (): void => {
-            var specificationTree = this.$scope.specificationTree;
+            var self = this;
+            var specificationTree = self.$scope.specificationTree;
 
-            this.$modal.open({
+            var modalInstance = this.$modal.open({
                 templateUrl: 'scripts/controllers/aliasModalInstanceController/aliasModalInstanceTpl.html',
                 controller: 'aliasModalInstanceController',
                 size: 'lg',
                 resolve: {
                     rootNode: function () {
                         return specificationTree;
+                    },
+                    aliases: function() {
+                        return self.$scope.aliases;
                     }
                 }
             });
+
+            modalInstance.result.then(function(aliases) {
+                self.$scope.aliases = aliases;
+                console.log(aliases);
+            })
         };
 
         drawGraph = (): void =>
