@@ -2,9 +2,12 @@
 
 /// <reference path="services/apiServices.ts" />
 /// <reference path="services/dataGenerationServices.ts" />
+/// <reference path="services/featureGenerationServices.ts" />
+
 /// <reference path="filters/selectFilters.ts" />
 /// <reference path="controllers/selectController.ts" />
 /// <reference path="controllers/aliasModalInstanceController/aliasModalInstanceController.ts" />
+/// <reference path="controllers/featureGenerationModalInstanceController/featureGenerationModalInstanceController.ts" />
 /// <reference path="directives/specificationTree/specificationTree.ts" />
 /// <reference path="directives/candidateTree/candidateTree.ts" />
 
@@ -16,8 +19,11 @@ appModule.service("getService", [ "$http", "$q", ($http, $q)
 appModule.service("exportService", [ "$http", "$q", ($http, $q)
     => new app.services.apiServices.exportService($http, $q) ]);
 
-appModule.service("specificationDataGenerationService", [ ()
-    => new app.services.dataGenerationServices.specificationTreeDataGenerationService() ]);
+appModule.service("dataGenerationService", [ ()
+    => new app.services.dataGenerationServices.dataGenerationService() ]);
+
+appModule.service("featureGenerationService", [ "dataGenerationService", (dataGenerationService)
+    => new app.services.featureGenerationServices.featureGenerationService(dataGenerationService) ]);
 
 appModule.filter("elementKindUniqueFilter", ()
     => app.filters.elementKindUniqueFilter());
@@ -26,17 +32,22 @@ appModule.filter("nameByElementKindFilter", ()
     => app.filters.nameByElementKindFilter());
 
 appModule.controller("aliasModalInstanceController",
-    ["$scope", "$modalInstance", "rootNode", "aliases", "exportService",
-        ($scope, $modalInstance, rootNode, aliases, exportService)
-            => new app.controllers.modalInstance.aliasModalInstanceController($scope, $modalInstance, rootNode, aliases, exportService)]);
+    ["$scope", "$modalInstance", "specificationTree", "candidateTree", "aliases", "exportService",
+        ($scope, $modalInstance, specificationTree, candidateTree, aliases, exportService)
+            => new app.controllers.aliasModalInstance.aliasModalInstanceController($scope, $modalInstance, specificationTree, candidateTree, aliases, exportService)]);
+
+appModule.controller("featureGenerationModalInstanceController",
+    ["$scope", "$modalInstance", "selectedStory", "specificationTree", "candidateTree", "aliases", "exportService", "featureGenerationService",
+        ($scope, $modalInstance, selectedStory, specificationTree, candidateTree, aliases, exportService, featureGenerationService)
+            => new app.controllers.featureGenerationModalInstance.featureGenerationModalInstanceController($scope, $modalInstance, selectedStory, specificationTree, candidateTree, aliases, exportService, featureGenerationService)]);
 
 appModule.controller("selectController",
-    ["$scope", "getService", "specificationDataGenerationService", "$filter", "$modal",
-    ($scope, getService, specificationDataGenerationService, $filter, $modal)
-    => new app.controllers.select.selectController($scope, getService, specificationDataGenerationService, $filter, $modal)]);
+    ["$scope", "getService", "dataGenerationService", "$filter", "$modal",
+    ($scope, getService, dataGenerationService, $filter, $modal)
+    => new app.controllers.select.selectController($scope, getService, dataGenerationService, $filter, $modal)]);
 
 appModule.directive("specificationTree", ()
     => new app.directives.specificationTree.specificationTree());
 
-appModule.directive("candidateTree", (exportService: any)
-    => new app.directives.candidateTree.CandidateTree(exportService));
+appModule.directive("candidateTree", (exportService: any, dataGenerationService: any)
+    => new app.directives.candidateTree.CandidateTree(exportService, dataGenerationService));

@@ -48,6 +48,7 @@ module data {
         guid: string;
         nodeGuid?: string;
         BUID?: string;
+        parentRelationship?: string;
         schemaElementGuid?: string;
         children: Array<IInstanceNode>;
         elementHierarchy: string;
@@ -75,6 +76,7 @@ module data {
         ChildEntity: ICandidateExportNode;
         CharacteristicUse?: any;
         ConfiguredValue?: any;
+        text?: any;
     }
 
     export interface IAliases {

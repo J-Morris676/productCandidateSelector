@@ -36,9 +36,14 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div data-ng-hide="specificationTree == null" class="col-lg-offset-7 col-lg-2">
-                                    <button ng-click="events.openAliasModal()" class="btn">Aliases</button>
+                                <div class="col-lg-5"></div>
+                                <div data-ng-hide="aliases == null" class="col-lg-2">
+                                    <button  ng-click="events.openFeatureGenerationModal()" class="btn">Feature Generation</button>
                                 </div>
+                                <div data-ng-hide="specificationTree == null" class="col-lg-2">
+                                    <button  ng-click="events.openAliasModal()" class="btn">Alias Configuration</button>
+                                </div>
+
                             </div>
                             <div ng-show="instances==null" class="row">
                                 <div class="col-sm-1 col-md-1 col-md-1 col-lg-1">
@@ -120,10 +125,12 @@
 
         <script src="scripts/services/apiServices.js"></script>
         <script src="scripts/services/dataGenerationServices.js"></script>
+        <script src="scripts/services/featureGenerationServices.js"></script>
 
         <script src="scripts/filters/selectFilters.js"></script>
         <script src="scripts/controllers/selectController.js"></script>
         <script src="scripts/controllers/aliasModalInstanceController/aliasModalInstanceController.js"></script>
+        <script src="scripts/controllers/featureGenerationModalInstanceController/featureGenerationModalInstanceController.js"></script>
         <script src="scripts/directives/specificationTree/specificationTree.js"></script>
         <script src="scripts/directives/candidateTree/candidateTree.js"></script>
     </body>

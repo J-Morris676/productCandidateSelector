@@ -1,0 +1,53 @@
+<div class="modal-header">
+    <h3 class="modal-title">Feature Generation</h3>
+</div>
+<div class="modal-body">
+
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="story" class="col-sm-2 control-label">Story No:</label>
+            <div class="col-sm-10">
+                <input type="text" ng-model="storyNo" class="form-control" id="story" placeholder="XXXXX">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="feature" class="col-sm-2 control-label">Feature:</label>
+            <div class="col-sm-10">
+                <input type="text" ng-init="feature=''" ng-model="feature" class="form-control" id="feature" placeholder="Stuff shouldn't break when this happens..">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="running-server" class="col-sm-2 control-label">Data Path:</label>
+            <div class="col-sm-10">
+                <input type="text" ng-init="dataPath=''" ng-model="dataPath" class="form-control" id="running-server" placeholder="../where/the/data/is">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="alias-path" class="col-sm-2 control-label">Alias Path:</label>
+            <div class="col-sm-10">
+                <input type="text" ng-init="aliasPath=''" ng-model="aliasPath" class="form-control" id="alias-path" placeholder="../where/the/aliases/are">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="scenario" class="col-sm-2 control-label">Request Scenario:</label>
+            <div class="col-sm-10">
+                <input type="text" ng-init="scenario=''" ng-model="scenario" class="form-control" id="scenario" placeholder="Any desktops which have a colour but no data package get a separate validation error">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="request-path" class="col-sm-2 control-label">Request Path:</label>
+            <div class="col-sm-10">
+                <input type="text" ng-init="requestPath=''" ng-model="requestPath" class="form-control" id="request-path" placeholder="../where/the/request/is">
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-info" type="button" ng-click="events.generateFeatureString()">Download</button>
+</div>

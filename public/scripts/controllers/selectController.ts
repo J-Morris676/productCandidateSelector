@@ -35,14 +35,14 @@ module app.controllers.select {
     {
         $scope:ISelectScope;
         $filter: any;
-        specificationDataGenerationService: any;
+        dataGenerationService: any;
         getService: any;
         $modal: any;
 
-        constructor($scope:ISelectScope, getService, specificationDataGenerationService, $filter, $modal)
+        constructor($scope:ISelectScope, getService, dataGenerationService, $filter, $modal)
         {
             this.$scope = $scope;
-            this.specificationDataGenerationService = specificationDataGenerationService;
+            this.dataGenerationService = dataGenerationService;
             this.$filter = $filter;
             this.getService = getService;
             this.$modal = $modal;
@@ -107,15 +107,17 @@ module app.controllers.select {
 
         openAliasModal = (): void => {
             var self = this;
-            var specificationTree = self.$scope.specificationTree;
 
             var modalInstance = this.$modal.open({
                 templateUrl: 'scripts/controllers/aliasModalInstanceController/aliasModalInstanceTpl.html',
                 controller: 'aliasModalInstanceController',
                 size: 'lg',
                 resolve: {
-                    rootNode: function () {
-                        return specificationTree;
+                    specificationTree: function () {
+                        return self.$scope.specificationTree;
+                    },
+                    candidateTree: function() {
+                        return self.dataGenerationService.generateTransformedCandidateTree(self.$scope.candidateTree, null, true);
                     },
                     aliases: function() {
                         return self.$scope.aliases;
@@ -125,16 +127,42 @@ module app.controllers.select {
 
             modalInstance.result.then(function(aliases) {
                 self.$scope.aliases = aliases;
-                console.log(aliases);
             })
+        };
+
+        openFeatureGenerationModal = (): void => {
+            var self = this;
+
+            var modalInstance = this.$modal.open({
+                templateUrl: 'scripts/controllers/featureGenerationModalInstanceController/featureGenerationModalInstanceTpl.html',
+                controller: 'featureGenerationModalInstanceController',
+                size: 'lg',
+                resolve: {
+                    selectedStory: function() {
+                        return self.$scope.selectedStory;
+                    },
+                    specificationTree: function () {
+                        return self.$scope.specificationTree;
+                    },
+                    aliases: function() {
+                        return self.$scope.aliases;
+                    },
+                    candidateTree: function() {
+                        return self.$scope.candidateTree;
+                    }
+                }
+            });
+
         };
 
         drawGraph = (): void =>
         {
-            this.specificationDataGenerationService.setInstances(this.$scope.instances);
-            this.specificationDataGenerationService.setRelationships(this.$scope.relationships);
+            this.$scope.aliases = null;
 
-            this.$scope.specificationTree = this.specificationDataGenerationService.generateSpecificationTreeData(this.$scope.elementNameAndGuid["guid"]);
+            this.dataGenerationService.setInstances(this.$scope.instances);
+            this.dataGenerationService.setRelationships(this.$scope.relationships);
+
+            this.$scope.specificationTree = this.dataGenerationService.generateSpecificationTreeData(this.$scope.elementNameAndGuid["guid"]);
         };
     }
 }

@@ -1,9 +1,10 @@
 /// <reference path="../interfaces/data.ts" />
+/// <reference path="../modules/InstanceTreeUtilities.ts" />
 
 module app.services.dataGenerationServices {
     'use strict';
 
-    export class specificationTreeDataGenerationService {
+    export class dataGenerationService {
         private instances: data.IInstances;
         private relationships: data.IRelationships;
 
@@ -79,6 +80,8 @@ module app.services.dataGenerationServices {
                     if (this.isInDate(new Date(childInstanceData.Association_Start_Date), new Date(childInstanceData.Association_End_Date))) {
                         var grandchildGuid: string = this.relationships[children[childIndex].Child][0].Child;
                         var grandchild: data.IInstanceNode = this.generateSpecificationTreeData(grandchildGuid);
+                        grandchild.parentRelationship = children[childIndex].Kind;
+
                         grandchild.cardinality = {
                             max: childInstanceData.Max_Occurs,
                             min: childInstanceData.Min_Occurs
@@ -89,12 +92,122 @@ module app.services.dataGenerationServices {
                     }
                 }
                 else {
-                    node.children.push(this.generateSpecificationTreeData(children[childIndex].Child));
+                    var builtChild: data.IInstanceNode = this.generateSpecificationTreeData(children[childIndex].Child);
+                    builtChild.parentRelationship = children[childIndex].Kind;
+                    node.children.push(builtChild);
                 }
 
             }
 
             return node;
+        }
+
+
+        public generateTransformedCandidateTree(treeNode: any, parentNode:data.ICandidateExportNode, ignoreErrors: boolean): data.ICandidateExportNode {
+
+            if (InstanceTreeUtilities.isUDCNode(treeNode)) {
+                if (treeNode.children.length == 0 ) {
+                    return null;
+                }
+                else if (treeNode.children[0].value == null) {
+                    if (!ignoreErrors)
+                        throw new Error("Error: UDC '" + treeNode.text + "' has not been set a value\n");
+                }
+                else {
+                    var useArea: string = "";
+
+                    var specCharRelationships: [data.IRelationship] = this.relationships[parentNode.EntityID];
+
+                    for (var relationship = 0; relationship < specCharRelationships.length; relationship++) {
+                        if (specCharRelationships[relationship].Child == treeNode.guid) {
+                            useArea = specCharRelationships[relationship].Kind;
+                        }
+                    }
+
+                    var ConfiguredValue = {
+                        UseArea: useArea,
+                        CharacteristicID: treeNode.children[0].guid,
+                        Value: [
+                            {"Value": treeNode.children[0].value}
+                        ]
+                    };
+                    if (parentNode.ConfiguredValue == null) {
+                        parentNode.ConfiguredValue = [ConfiguredValue];
+                    }
+                    else {
+                        parentNode.ConfiguredValue.push(ConfiguredValue);
+                    }
+
+                }
+            }
+            else if (InstanceTreeUtilities.isCharacteristicNode(treeNode)) {
+                var useArea: string = "";
+
+                var specCharRelationships: [data.IRelationship] = this.relationships[parentNode.EntityID];
+
+                for (var relationship = 0; relationship < specCharRelationships.length; relationship++) {
+                    if (specCharRelationships[relationship].Child == treeNode.guid) {
+                        useArea = specCharRelationships[relationship].Kind;
+                    }
+                }
+
+                var CharacteristicUse = {
+                    "UseArea": useArea,
+                    "CharacteristicID": this.relationships[treeNode.children[0].guid][0].Child,
+                    "Value":  []
+                };
+
+                for (childIndex = 0; childIndex < treeNode.children.length; childIndex++) {
+                    var child: data.ISelectableCharInstanceNode = treeNode.children[childIndex];
+
+                    if (child.checked == true) {
+                        CharacteristicUse.Value.push({ValueID: child.guid});
+                    }
+                }
+
+                if (InstanceTreeUtilities.isCharacteristicUseBetweenCardinality(treeNode)) {
+                    if (CharacteristicUse.Value.length > 0) {
+                        if (parentNode.CharacteristicUse == null) {
+                            parentNode.CharacteristicUse = [CharacteristicUse]
+                        }
+                        else {
+                            parentNode.CharacteristicUse.push(CharacteristicUse);
+                        }
+                    }
+                }
+                else {
+                    if (!ignoreErrors)
+                        throw new Error("Error: '" + treeNode.text + "' is not between cardinality\n"
+                            + "Cardinality: " + treeNode.cardinality.max + ":" + treeNode.cardinality.min + "\n"
+                            + "Characteristic values: " + CharacteristicUse.Value.length);
+                }
+
+                return null;
+            }
+            else {
+                var newNode: data.ICandidateExportNode = {
+                    ID: treeNode.nodeGuid,
+                    EntityID: treeNode.guid,
+                    _IsNewForCustomer: true,
+                    ChildEntity: treeNode.children
+                };
+
+                treeNode = newNode;
+
+                for (var childIndex = 0; childIndex < treeNode.ChildEntity.length; childIndex++) {
+                    var childNode = this.generateTransformedCandidateTree(treeNode.ChildEntity[childIndex], treeNode, ignoreErrors);
+
+                    if (childNode != null) {
+                        treeNode.ChildEntity[childIndex] = childNode;
+                    }
+                    else {
+                        treeNode.ChildEntity.splice(childIndex, 1);
+                        childIndex--;
+                    }
+                }
+
+                return treeNode;
+            }
         }
 
         private findGroupCardinality(entityRelationChildren: data.IRelationship[]): data.ICardinality {

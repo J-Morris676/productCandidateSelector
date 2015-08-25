@@ -15,13 +15,14 @@ module app.directives.candidateTree {
         relationships: data.IRelationships;
         downloadFile: any;
         exportService: any;
+        dataGenerationService: any;
         dataWithCharacteristicSelections: data.IInstanceNode
     }
 
     export class CandidateTree implements ng.IDirective {
 
-        static $inject = ["exportService"];
-        constructor(public exportService: any) {}
+        static $inject = ["exportService", "dataGenerationService"];
+        constructor(public exportService: any, public dataGenerationService: any) {}
 
         public restrict = 'E';
         public scope = {
@@ -198,7 +199,7 @@ module app.directives.candidateTree {
             scope.downloadFile = function(fileType) {
                 var treeRoot: data.IInstanceNode = _.clone(scope.dataWithCharacteristicSelections, true);
                 try {
-                    var exportTree: data.ICandidateExportNode = generateTransformedTreeForExport(treeRoot, null);
+                    var exportTree: data.ICandidateExportNode = self.dataGenerationService.generateTransformedCandidateTree(treeRoot, null, false);
                     var exportCandidateTree = {
                         "CreationDate": new Date().toISOString().substring(0, 10),
                         "ProductCandidate": exportTree
@@ -211,111 +212,6 @@ module app.directives.candidateTree {
                     alert(error);
                 }
             };
-
-            function generateTransformedTreeForExport(treeNode: any, parentNode:data.ICandidateExportNode): data.ICandidateExportNode {
-
-                if (InstanceTreeUtilities.isUDCNode(treeNode)) {
-                    if (treeNode.children.length == 0 ) {
-                        return null;
-                    }
-                    else if (treeNode.children[0].value == null) {
-                        throw new Error("Error: UDC '" + treeNode.text + "' has not been set a value\n");
-                    }
-                    else {
-                        var useArea: string = "";
-
-                        var specCharRelationships: [data.IRelationship] = scope.relationships[parentNode.EntityID];
-
-                        for (var relationship = 0; relationship < specCharRelationships.length; relationship++) {
-                            if (specCharRelationships[relationship].Child == treeNode.guid) {
-                                useArea = specCharRelationships[relationship].Kind;
-                            }
-                        }
-
-                        var ConfiguredValue = {
-                            UseArea: useArea,
-                            CharacteristicID: treeNode.children[0].guid,
-                            Value: [
-                                {"Value": treeNode.children[0].value}
-                            ]
-                        };
-                        if (parentNode.ConfiguredValue == null) {
-                            parentNode.ConfiguredValue = [ConfiguredValue];
-                        }
-                        else {
-                            parentNode.ConfiguredValue.push(ConfiguredValue);
-                        }
-
-                    }
-                }
-                else if (InstanceTreeUtilities.isCharacteristicNode(treeNode)) {
-                    var useArea: string = "";
-
-                    var specCharRelationships: [data.IRelationship] = scope.relationships[parentNode.EntityID];
-
-                    for (var relationship = 0; relationship < specCharRelationships.length; relationship++) {
-                        if (specCharRelationships[relationship].Child == treeNode.guid) {
-                            useArea = specCharRelationships[relationship].Kind;
-                        }
-                    }
-
-                    var CharacteristicUse = {
-                        "UseArea": useArea,
-                        "CharacteristicID": scope.relationships[treeNode.children[0].guid][0].Child,
-                        "Value":  []
-                    };
-
-                    for (childIndex = 0; childIndex < treeNode.children.length; childIndex++) {
-                        var child: data.ISelectableCharInstanceNode = treeNode.children[childIndex];
-
-                        if (child.checked == true) {
-                            CharacteristicUse.Value.push({ValueID: child.guid});
-                        }
-                    }
-
-                    if (InstanceTreeUtilities.isCharacteristicUseBetweenCardinality(treeNode)) {
-                        if (CharacteristicUse.Value.length > 0) {
-                            if (parentNode.CharacteristicUse == null) {
-                                parentNode.CharacteristicUse = [CharacteristicUse]
-                            }
-                            else {
-                                parentNode.CharacteristicUse.push(CharacteristicUse);
-                            }
-                        }
-                    }
-                    else {
-                        throw new Error("Error: '" + treeNode.text + "' is not between cardinality\n"
-                            + "Cardinality: " + treeNode.cardinality.max + ":" + treeNode.cardinality.min + "\n"
-                            + "Characteristic values: " + CharacteristicUse.Value.length);
-                    }
-
-                    return null;
-                }
-                else {
-                    var newNode: data.ICandidateExportNode = {
-                        ID: treeNode.nodeGuid,
-                        EntityID: treeNode.guid,
-                        _IsNewForCustomer: true,
-                        ChildEntity: treeNode.children
-                    };
-
-                    treeNode = newNode;
-
-                    for (var childIndex = 0; childIndex < treeNode.ChildEntity.length; childIndex++) {
-                        var childNode = generateTransformedTreeForExport(treeNode.ChildEntity[childIndex], treeNode);
-
-                        if (childNode != null) {
-                            treeNode.ChildEntity[childIndex] = childNode;
-                        }
-                        else {
-                            treeNode.ChildEntity.splice(childIndex, 1);
-                            childIndex--;
-                        }
-                    }
-
-                    return treeNode;
-                }
-            }
         }
     }
 }

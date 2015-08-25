@@ -120,14 +120,16 @@ module InstanceTreeUtilities {
         return null;
     }
 
-    export function flattenTreeIntoArray(treeRoot: data.IInstanceNode): Array<data.IInstanceNode> {
+    export function flattenTreeIntoArray(treeRoot: any, childProperty: string): Array<any> {
         var flattenedArray: Array<data.IInstanceNode> = [];
 
         flattenedArray.push(treeRoot);
 
-        for (var childIdx = 0; childIdx < treeRoot.children.length; childIdx++) {
-            var childIndexes: Array<data.IInstanceNode> = flattenTreeIntoArray(treeRoot.children[childIdx]);
-            flattenedArray = flattenedArray.concat(childIndexes);
+        if (treeRoot[childProperty] != null) {
+            for (var childIdx = 0; childIdx < treeRoot[childProperty].length; childIdx++) {
+                var childIndexes: Array<any> = flattenTreeIntoArray(treeRoot[childProperty][childIdx], childProperty);
+                flattenedArray = flattenedArray.concat(childIndexes);
+            }
         }
 
         return flattenedArray;
