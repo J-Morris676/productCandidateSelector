@@ -14,17 +14,21 @@ module app.controllers.featureGenerationModalInstance {
         events: featureGenerationModalInstanceController;
         exportService: any;
 
+        featureString: string;
+
         nodesInTree: Array<data.IInstanceNode>;
         aliases: data.IAliases;
         specificationTree: data.IInstanceNode;
         candidateTree: data.IInstanceNode;
 
-        storyNo: string;
-        feature: string;
-        dataPath: string;
-        aliasPath: string;
-        scenario: string;
-        requestPath: string;
+        formFields: {
+            storyNo: string;
+            feature: string;
+            dataPath: string;
+            aliasPath: string;
+            scenario: string;
+            requestPath: string;
+        }
     }
 
     export class featureGenerationModalInstanceController {
@@ -33,6 +37,17 @@ module app.controllers.featureGenerationModalInstance {
         exportService: any;
         featureGenerationService: any;
 
+        initVariables(): void {
+            this.$scope.formFields = {
+                storyNo: "",
+                feature: "",
+                dataPath: "",
+                aliasPath: "",
+                scenario: "",
+                requestPath: ""
+            }
+
+        }
 
         constructor($scope:IAliasModalScope, $modalInstance:any, selectedStory: string, specificationTree:data.IInstanceNode, candidateTree:data.IInstanceNode, aliases: data.IAliases, exportService: any, featureGenerationService: any) {
             this.$modalInstance = $modalInstance;
@@ -40,7 +55,8 @@ module app.controllers.featureGenerationModalInstance {
             this.exportService = exportService;
             this.featureGenerationService = featureGenerationService;
 
-            this.$scope.storyNo = selectedStory;
+            this.initVariables();
+            this.$scope.formFields.storyNo = selectedStory;
 
             this.$scope.specificationTree = specificationTree;
             this.$scope.candidateTree = candidateTree;
@@ -49,19 +65,19 @@ module app.controllers.featureGenerationModalInstance {
             $scope.events = this;
         }
 
-        generateFeatureString(): string {
+        generateFeatureString(): void {
             var scope = this.$scope;
-            this.featureGenerationService.setStoryNo(scope.storyNo);
+            this.featureGenerationService.setStoryNo(scope.formFields.storyNo);
             this.featureGenerationService.setAliases(scope.aliases);
             this.featureGenerationService.setSpecificationTree(scope.specificationTree);
             this.featureGenerationService.setCandidateTree(scope.candidateTree);
-            this.featureGenerationService.setFeature(scope.feature);
-            this.featureGenerationService.setDataPath(scope.dataPath);
-            this.featureGenerationService.setAliasPath(scope.aliasPath);
-            this.featureGenerationService.setScenario(scope.scenario);
-            this.featureGenerationService.setRequestPath(scope.requestPath);
+            this.featureGenerationService.setFeature(scope.formFields.feature);
+            this.featureGenerationService.setDataPath(scope.formFields.dataPath);
+            this.featureGenerationService.setAliasPath(scope.formFields.aliasPath);
+            this.featureGenerationService.setScenario(scope.formFields.scenario);
+            this.featureGenerationService.setRequestPath(scope.formFields.requestPath);
 
-            return this.featureGenerationService.generateFeature();
+            scope.featureString = this.featureGenerationService.generateFeature();
         }
     }
 }

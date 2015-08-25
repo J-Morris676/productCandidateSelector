@@ -1,6 +1,7 @@
 /// <reference path="../../typings/angular/angular.d.ts" />
 /// <reference path="../interfaces/data.ts" />
 /// <reference path="../filters/selectFilters.ts" />
+/// <reference path="../../typings/lodash/lodash.d.ts" />
 
 /// <reference path="../modules/InstanceTreeUtilities.ts" />
 
@@ -108,6 +109,8 @@ module app.controllers.select {
         openAliasModal = (): void => {
             var self = this;
 
+            var clonedCandidateTree = _.clone(self.$scope.candidateTree, true);
+
             var modalInstance = this.$modal.open({
                 templateUrl: 'scripts/controllers/aliasModalInstanceController/aliasModalInstanceTpl.html',
                 controller: 'aliasModalInstanceController',
@@ -117,7 +120,7 @@ module app.controllers.select {
                         return self.$scope.specificationTree;
                     },
                     candidateTree: function() {
-                        return self.dataGenerationService.generateTransformedCandidateTree(self.$scope.candidateTree, null, true);
+                        return self.dataGenerationService.generateTransformedCandidateTree(clonedCandidateTree, null, true);
                     },
                     aliases: function() {
                         return self.$scope.aliases;
