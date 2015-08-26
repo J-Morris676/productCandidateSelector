@@ -165,7 +165,7 @@ module app.controllers.select {
             this.dataGenerationService.setInstances(this.$scope.instances);
             this.dataGenerationService.setRelationships(this.$scope.relationships);
 
-            this.$scope.specificationTree = this.dataGenerationService.generateSpecificationTreeData(this.$scope.elementNameAndGuid["guid"]);
+            this.$scope.specificationTree = this.dataGenerationService.generateSpecificationTreeData(null, this.$scope.elementNameAndGuid["guid"]);
         };
     }
 }

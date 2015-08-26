@@ -3,7 +3,7 @@
 
 /// <reference path="../../interfaces/data.ts" />
 /// <reference path="../../modules/InstanceTreeUtilities.ts" />
-/// <reference path="../../services/featureGenerationServices.ts" />
+/// <reference path="../../services/featureBuilderServices.ts" />
 
 module app.controllers.featureGenerationModalInstance {
     'use strict';
@@ -35,7 +35,7 @@ module app.controllers.featureGenerationModalInstance {
         $scope:IAliasModalScope;
         $modalInstance: any;
         exportService: any;
-        featureGenerationService: any;
+        featureBuilderService: any;
 
         initVariables(): void {
             this.$scope.formFields = {
@@ -49,11 +49,11 @@ module app.controllers.featureGenerationModalInstance {
 
         }
 
-        constructor($scope:IAliasModalScope, $modalInstance:any, selectedStory: string, specificationTree:data.IInstanceNode, candidateTree:data.IInstanceNode, aliases: data.IAliases, exportService: any, featureGenerationService: any) {
+        constructor($scope:IAliasModalScope, $modalInstance:any, selectedStory: string, specificationTree:data.IInstanceNode, candidateTree:data.IInstanceNode, aliases: data.IAliases, exportService: any, featureBuilderService: any) {
             this.$modalInstance = $modalInstance;
             this.$scope = $scope;
             this.exportService = exportService;
-            this.featureGenerationService = featureGenerationService;
+            this.featureBuilderService = featureBuilderService;
 
             this.initVariables();
             this.$scope.formFields.storyNo = selectedStory;
@@ -67,17 +67,17 @@ module app.controllers.featureGenerationModalInstance {
 
         generateFeatureString(): void {
             var scope = this.$scope;
-            this.featureGenerationService.setStoryNo(scope.formFields.storyNo);
-            this.featureGenerationService.setAliases(scope.aliases);
-            this.featureGenerationService.setSpecificationTree(scope.specificationTree);
-            this.featureGenerationService.setCandidateTree(scope.candidateTree);
-            this.featureGenerationService.setFeature(scope.formFields.feature);
-            this.featureGenerationService.setDataPath(scope.formFields.dataPath);
-            this.featureGenerationService.setAliasPath(scope.formFields.aliasPath);
-            this.featureGenerationService.setScenario(scope.formFields.scenario);
-            this.featureGenerationService.setRequestPath(scope.formFields.requestPath);
+            this.featureBuilderService.setStoryNo(scope.formFields.storyNo);
+            this.featureBuilderService.setAliases(scope.aliases);
+            this.featureBuilderService.setSpecificationTree(scope.specificationTree);
+            this.featureBuilderService.setCandidateTree(scope.candidateTree);
+            this.featureBuilderService.setFeature(scope.formFields.feature);
+            this.featureBuilderService.setDataPath(scope.formFields.dataPath);
+            this.featureBuilderService.setAliasPath(scope.formFields.aliasPath);
+            this.featureBuilderService.setScenario(scope.formFields.scenario);
+            this.featureBuilderService.setRequestPath(scope.formFields.requestPath);
 
-            scope.featureString = this.featureGenerationService.generateFeature();
+            scope.featureString = this.featureBuilderService.generateFeature();
         }
     }
 }

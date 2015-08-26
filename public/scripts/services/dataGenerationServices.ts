@@ -17,7 +17,7 @@ module app.services.dataGenerationServices {
             this.relationships = relationships;
         }
 
-        public generateSpecificationTreeData(guid: string): data.IInstanceNode {
+        public generateSpecificationTreeData(parentToChildRelationship: data.IRelationship, guid: string): data.IInstanceNode {
             var instance: data.IInstance = this.instances[guid];
             var instanceAsObjects: data.IInstanceObject = this.convertInstanceObjectArraysToObjects(instance);
 
@@ -48,6 +48,7 @@ module app.services.dataGenerationServices {
             }
             else if(instanceMeta.ElementKind == "TSpecCharUse") {
                 node.text = instanceData.Description;
+                node.useArea = parentToChildRelationship.Kind;
                 node.cardinality = {
                     max: instanceData.Max_Occurs || "1",
                     min: instanceData.Min_Occurs
@@ -79,7 +80,7 @@ module app.services.dataGenerationServices {
                 if (childExplicitType  == "Relation_Entity") {
                     if (this.isInDate(new Date(childInstanceData.Association_Start_Date), new Date(childInstanceData.Association_End_Date))) {
                         var grandchildGuid: string = this.relationships[children[childIndex].Child][0].Child;
-                        var grandchild: data.IInstanceNode = this.generateSpecificationTreeData(grandchildGuid);
+                        var grandchild: data.IInstanceNode = this.generateSpecificationTreeData(children[childIndex], grandchildGuid);
                         grandchild.parentRelationship = children[childIndex].Kind;
 
                         grandchild.cardinality = {
@@ -92,7 +93,7 @@ module app.services.dataGenerationServices {
                     }
                 }
                 else {
-                    var builtChild: data.IInstanceNode = this.generateSpecificationTreeData(children[childIndex].Child);
+                    var builtChild: data.IInstanceNode = this.generateSpecificationTreeData(children[childIndex], children[childIndex].Child);
                     builtChild.parentRelationship = children[childIndex].Kind;
                     node.children.push(builtChild);
                 }

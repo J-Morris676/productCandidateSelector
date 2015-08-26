@@ -52,6 +52,7 @@ module data {
         schemaElementGuid?: string;
         children: Array<IInstanceNode>;
         elementHierarchy: string;
+        useArea?: string;
         cardinality: ICardinality;
         groupCardinality: ICardinality;
     }
