@@ -1,4 +1,5 @@
 /// <reference path="../interfaces/data.ts" />
+/// <reference path="../../typings/lodash/lodash.d.ts" />
 
 /// <reference path="../modules/InstanceTreeUtilities.ts" />
 
@@ -11,9 +12,20 @@ module app.services.featureGenerationServices {
         keyValue: Array<string>;
     }
 
-    interface IPropertyValue {
-            propertyName: string;
-            outputPropertyName:string;
+    interface IProperty {
+        propertyName: string;
+        outputPropertyName:string;
+        useAlias?: boolean;
+    }
+
+    interface IPropertyValues {
+        mustEqualRule?: {
+            property: string;
+            value: string;
+        };
+        evaluateTrueRule?: (node: data.IInstanceNode) => boolean;
+        selector?: string;
+        properties: [IProperty];
     }
 
     export class featureGenerationService {
@@ -75,6 +87,9 @@ module app.services.featureGenerationServices {
             this.requestPath = requestPath;
         }
 
+        /*
+            Feature string builder
+         */
         public generateFeature(): string {
             var featureString = "#" + this.storyNo + "\n@:CommonSteps\n\n";
 
@@ -101,8 +116,21 @@ module app.services.featureGenerationServices {
             }
             featureString = featureString + "And the datastore contains a product spec with ID \"" + productSpecAliasId + "\"\n\n\t\t";
 
-            featureString += this.writeProductToProductTable(this.specificationTree);
+            var requestTableProductToProductInstances: IPropertyValues = {
+                evaluateTrueRule: InstanceTreeUtilities.isLaunchEntity,
+                mustEqualRule: {
+                    "property": "parentRelationship",
+                    "value": "Product_To_Product"
+                },
+                selector: "Product",
+                properties: [
+                    {"propertyName": "guid", "outputPropertyName": "Product.ElementGuid", useAlias: true},
+                    {"propertyName": "cardinality.min", "outputPropertyName": "MinOccurs", useAlias: false},
+                    {"propertyName": "cardinality.max", "outputPropertyName": "MaxOccurs", useAlias: false}
+                ]
+            };
 
+            featureString += this.writeInstancesTable(this.specificationTree, "\t\t\t", "Product_To_Product", "ProductSpec", requestTableProductToProductInstances);
 
             //Request
             featureString += "\n\n\t\t#---------- Request ---------------------\n\t\t";
@@ -111,29 +139,43 @@ module app.services.featureGenerationServices {
             featureString += "Given a \"Product Candidate\" JSON request that is populated from \"" + this.requestPath + "\"\n\n\t\t\t";
             featureString += "And that \"request\" contains a \"ProductCandidate\"\n\n\t\t\t";
 
-            var requestTableProperties: Array<IPropertyValue> = [
-                {"propertyName": "nodeGuid", "outputPropertyName": "ID"},
-                {"propertyName": "guid", "outputPropertyName": "EntityID"}
-            ];
+            var requestTableProperties: IPropertyValues = {
+                evaluateTrueRule: InstanceTreeUtilities.isLaunchEntity,
+                properties: [
+                    {"propertyName": "nodeGuid", "outputPropertyName": "ID"},
+                    {"propertyName": "guid", "outputPropertyName": "EntityID"}
+                ]
+            };
 
-            featureString += this.writePropertyValueTable(this.candidateTree, "ProductCandidate", requestTableProperties);
+            featureString += this.writePropertiesTable(this.candidateTree, "ProductCandidate", requestTableProperties);
+            featureString += "\n\n\t\t\t";
 
-            console.log(this.candidateTree);
+            var requestTableChildEntityInstances: IPropertyValues = {
+                evaluateTrueRule: InstanceTreeUtilities.isLaunchEntity,
+                properties: [
+                    {"propertyName": "nodeGuid", "outputPropertyName": "ID", useAlias: true},
+                    {"propertyName": "guid", "outputPropertyName": "EntityID", useAlias: true}
+                ]
+            };
 
-            console.log(featureString);
+            featureString += this.writeInstancesTable(this.candidateTree, "\t\t\t\t", "ChildEntity", "ProductCandidate", requestTableChildEntityInstances);
+
             return featureString;
         }
 
-
-        writePropertyValueTable(tree: data.IInstanceNode, rootElementName: string, propertyValues: Array<IPropertyValue>): string {
+        /*
+            Properties table
+         */
+        writePropertiesTable(tree: data.IInstanceNode, rootElementName: string, propertyValues: IPropertyValues): string {
             var table: Array<Array<string>> = [];
+            var properties = propertyValues.properties;
 
             var tableHeaders: Array<string> = this.tableHeaders.keyValue;
 
             table.push(tableHeaders);
 
-            for (var propertyIdx = 0; propertyIdx < propertyValues.length; propertyIdx++) {
-                table = table.concat(this.generatePropertyValueContent(tree, propertyValues[propertyIdx]));
+            for (var propertyIdx = 0; propertyIdx < properties.length; propertyIdx++) {
+                table = table.concat(this.generatePropertiesTableContent(tree, properties[propertyIdx]));
             }
 
             var propertyValueString: string = "";
@@ -147,56 +189,99 @@ module app.services.featureGenerationServices {
             return propertyValueString;
         }
 
-        private writeProductToProductTable(specificationTree: data.IInstanceNode): string {
-            var table: Array<Array<string>> = [];
-
-            var tableHeaders: Array<string> = this.tableHeaders.ProductToProduct;
-            var tableContent = this.generateTableContent(specificationTree, "ProductSpec");
-
-            table.push(tableHeaders);
-            table = table.concat(tableContent);
-
-            var productToProductString: string = "";
-
-            var tableString = this.writeTableStringFromArray(table, "\t\t\t");
-            if (tableString != "") {
-                productToProductString += "And the \"Product_To_Product\" contains the following instances:\n";
-                productToProductString += tableString;
-            }
-
-            return productToProductString;
-        }
-
-        private generatePropertyValueContent(tree: data.IInstanceNode, propertyValue: IPropertyValue): Array<Array<string>> {
+        private generatePropertiesTableContent(tree: data.IInstanceNode, property: IProperty): Array<Array<string>> {
             var self = this;
             var table: Array<Array<string>> = [];
 
-            var aliasName: string = this.getKeyByValue(self.aliases, tree[propertyValue.propertyName]);
-            table.push([propertyValue.outputPropertyName, aliasName]);
+            var aliasName: string = this.getKeyByValue(self.aliases, tree[property.propertyName]);
+            table.push([property.outputPropertyName, aliasName]);
 
             return table;
         }
 
-        private generateTableContent(specificationTree: data.IInstanceNode, parentContextName: string): Array<Array<string>> {
-            var self = this;
+        /*
+            Instances table
+         */
+        private writeInstancesTable(tree: data.IInstanceNode, tabs:string, propertyName: string, rootElementName: string, propertyValues: IPropertyValues): string {
             var table: Array<Array<string>> = [];
+            var properties = propertyValues.properties;
 
-            for (var childIdx = 0; childIdx < specificationTree.children.length; childIdx++) {
-                var child: data.IInstanceNode = specificationTree.children[childIdx];
+            var tableHeaders: Array<string> = ["ParentContextName", "ContextName"];
 
-                var aliasName: string = this.getKeyByValue(self.aliases, child.guid);
+            var tableContent: Array<Array<string>> = [];
 
-                if (child.parentRelationship == "Product_To_Product") {
-                    var row: Array<string> = [parentContextName, aliasName, child.cardinality.min, child.cardinality.max, aliasName.concat("Item"), "Product"];
-                    table.push(row);
+            var instanceTableString = "";
 
-                    var childRows: Array<Array<string>> = this.generateTableContent(child, aliasName.concat("Item"));
-                    for (var i = 0; i < childRows.length; i++) table.push(childRows[i]);
+            for (var propertyValueIdx = (properties.length-1); propertyValueIdx >= 0; propertyValueIdx--) {
+                tableHeaders.splice(1, 0, properties[propertyValueIdx].outputPropertyName);
+            }
+
+            if (!_.isUndefined(propertyValues.selector))
+                tableHeaders.push("Selector");
+
+            table.push(tableHeaders);
+
+            tableContent = this.generateInstanceTableContent(tree, rootElementName, propertyValues);
+            table = table.concat(tableContent);
+
+            if (table.length > 1) {
+                var tableString = this.writeTableStringFromArray(table, tabs);
+                if (tableString != "") {
+                    instanceTableString += "And the \"" + propertyName + "\" contains the following instances:\n";
+                    instanceTableString += tableString;
                 }
             }
 
-            return table;
+            return instanceTableString;
         }
+
+        generateInstanceTableContent(tree: data.IInstanceNode, parentContextName: string, propertyValues:IPropertyValues): Array<Array<string>> {
+            var subTable: Array<Array<string>> = [];
+            var properties = propertyValues.properties;
+            var mustEqualRule = propertyValues.mustEqualRule;
+            var mustEvaluateTrueRule = propertyValues.evaluateTrueRule;
+
+            for (var childIdx = 0; childIdx < tree.children.length; childIdx++) {
+                var child: data.IInstanceNode = tree.children[childIdx];
+
+                //TODO: This prevents characteristic child entities getting in - This may need to be changed depending
+                //TODO: on what type of instance table we're creating.. we may want a flag to say actually, we only want characteristic nodes for example.
+                if (!mustEvaluateTrueRule(child))
+                    continue;
+
+                if (!_.isUndefined(mustEqualRule) && _.get(child, mustEqualRule.property) != mustEqualRule.value)
+                    continue;
+
+                var childRow: Array<string> = [parentContextName];
+                var contextName = parentContextName + "_child_" + (childIdx+1);
+
+                for (var propertyValue in properties) {
+                    var value = <string> _.get(child, properties[propertyValue].propertyName);
+
+                    if (properties[propertyValue].useAlias) {
+                        value = this.getKeyByValue(this.aliases, value);
+                    }
+
+                    childRow.push(value);
+
+                }
+                childRow.push(contextName);
+
+                if (!_.isUndefined(propertyValues.selector))
+                    childRow.push(propertyValues.selector);
+
+                subTable.push(childRow);
+
+                var childSubTable = this.generateInstanceTableContent(child, contextName, propertyValues);
+                subTable = subTable.concat(childSubTable);
+            }
+
+            return subTable;
+        }
+
+
+
+
 
         private writeTableStringFromArray(table: Array<Array<string>>, tabs: string): string {
             var columnLength = table[0].length;
