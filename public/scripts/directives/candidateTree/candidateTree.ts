@@ -16,7 +16,9 @@ module app.directives.candidateTree {
         downloadFile: any;
         exportService: any;
         dataGenerationService: any;
-        dataWithCharacteristicSelections: data.IInstanceNode
+        dataWithCharacteristicSelections: data.IInstanceNode;
+
+        getUpdatedTree: () => data.IInstanceNode;
     }
 
     export class CandidateTree implements ng.IDirective {
@@ -29,7 +31,8 @@ module app.directives.candidateTree {
             data: "=",
             selectedNode: "=?",
             relationships: "=",
-            dataWithCharacteristicSelections: "@"
+            dataWithCharacteristicSelections: "@",
+            getUpdatedTree: "="
         };
         public templateUrl = "scripts/directives/candidateTree/candidateTree.html";
 
@@ -45,6 +48,10 @@ module app.directives.candidateTree {
             else {
                 renderTreeAndRegisterEvents();
             }
+
+            scope.getUpdatedTree = function(): data.IInstanceNode {
+                return _.clone(scope.dataWithCharacteristicSelections, true);
+            };
 
             function addDataWatcher() {
                 var unwatch = scope.$watch("data", function (newData, oldData) {

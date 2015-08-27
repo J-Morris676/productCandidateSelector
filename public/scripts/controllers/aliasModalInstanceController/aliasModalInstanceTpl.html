@@ -12,7 +12,6 @@
                     <th>GUID</th>
                     <th>Type</th>
                     <th>Alias</th>
-                    <th style="width:50px;"></th>
                 </tr>
                 </thead>
             </table>
@@ -26,9 +25,6 @@
                         <td>
                             <input style="font-size: 10px;" ng-model="node.text" class="form-control">
                         </td>
-                        <td style="width:50px;">
-                            <span title="Remove from aliases" data-ng-click="events.removeFromArray(specNodesInTree, $index)" style="padding-top:7px;cursor:pointer;color:red" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -36,39 +32,102 @@
         </tab>
 
         <tab heading="Candidate Aliases">
-            <table class="table" style="margin-bottom:0px;table-layout:fixed">
-                <thead>
-                <tr>
-                    <th>EntityID</th>
-                    <th>ID</th>
-                    <th>Alias</th>
-                    <th style="width:50px;"></th>
-                </tr>
-                </thead>
-            </table>
 
-            <div style="overflow-y:auto;height:350px;">
-                <table class="table table-condensed" style="table-layout:fixed">
-                    <tbody>
-                    <tr ng-repeat="node in candidateNodesInTree | orderBy:'type'">
-                        <td style="padding-top:15px;font-size: 10px;">{{node.EntityID}}</td>
-                        <td style="padding-top:15px;font-size: 10px;">{{node.ID}}</td>
-                        <td>
-                            <input style="font-size: 10px;" ng-model="node.text" class="form-control">
-                        </td>
-                        <td style="width:50px;">
-                            <span title="Remove from aliases" data-ng-click="events.removeFromArray(candidateNodesInTree, $index)" style="padding-top:7px;cursor:pointer;color:red" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div style="margin-top:10px;margin-bottom: 10px;text-align: center;">
+                <label class="radio-inline"><input type="radio" ng-model="candidateTable.selected" value="orderItems">Order Items</label>
+                <label ng-hide="charUseNodes.length==0" class="radio-inline"><input type="radio" ng-model="candidateTable.selected" value="charUses">Characteristic Uses</label>
+                <label ng-hide="charValueNodes.length==0" class="radio-inline"><input type="radio" ng-model="candidateTable.selected" value="charValues">Characteristic Values</label>
+
             </div>
+
+
+            <div ng-show="candidateTable.selected=='orderItems'">
+                <table class="table" style="margin-bottom:0px;table-layout:fixed">
+                    <thead>
+                    <tr>
+                        <th>EntityID</th>
+                        <th>ID</th>
+                        <th>Alias</th>
+                    </tr>
+                    </thead>
+                </table>
+
+                <div style="overflow-y:auto;height:350px;">
+                    <table class="table table-condensed" style="table-layout:fixed">
+                        <tbody>
+                        <tr ng-repeat="node in orderItemNodes | orderBy:'type'">
+                            <td style="padding-top:15px;font-size: 10px;">{{node.EntityID}}</td>
+                            <td style="padding-top:15px;font-size: 10px;">{{node.ID}}</td>
+                            <td>
+                                <input style="font-size: 10px;" ng-model="node.text" class="form-control">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div ng-show="candidateTable.selected=='charUses'">
+                <table class="table" style="margin-bottom:0px;table-layout:fixed">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Use Area</th>
+                        <th>Alias</th>
+                    </tr>
+                    </thead>
+                </table>
+
+                <div style="overflow-y:auto;height:350px;">
+                    <table class="table table-condensed" style="table-layout:fixed">
+                        <tbody>
+                        <tr ng-repeat="node in charUseNodes | orderBy:'type'">
+                            <td style="padding-top:15px;font-size: 10px;">{{node.CharacteristicID}}</td>
+                            <td style="padding-top:15px;font-size: 10px;">{{node.UseArea}}</td>
+                            <td>
+                                <input style="font-size: 10px;" ng-model="node.text" class="form-control">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div ng-show="candidateTable.selected=='charValues'">
+                <table class="table" style="margin-bottom:0px;table-layout:fixed">
+                    <thead>
+                    <tr>
+                        <th>ValueID</th>
+                        <th>Alias</th>
+                    </tr>
+                    </thead>
+                </table>
+
+                <div style="overflow-y:auto;height:350px;">
+                    <table class="table table-condensed" style="table-layout:fixed">
+                        <tbody>
+                        <tr ng-repeat="node in charValueNodes | orderBy:'type'">
+                            <td style="padding-top:15px;font-size: 10px;">{{node.ValueID}}</td>
+                            <td>
+                                <input style="font-size: 10px;" ng-model="node.text" class="form-control">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+
+
         </tab>
     </tabset>
 </div>
 
 <div class="modal-footer">
-    <span style="font-size: 13px;margin-right:5px;">{{specNodesInTree.length+candidateNodesInTree.length}} Aliases</span>
+    <span style="font-size: 13px;margin-right:5px;">{{specNodesInTree.length+charValueNodes.length+orderItemNodes.length+charUseNodes.length}} Aliases</span>
     <button class="btn btn-info" type="button" ng-click="events.downloadAliases()">Download</button>
     <button class="btn btn-primary" type="button" ng-click="events.updateAliasesAndClose()">Update</button>
 </div>

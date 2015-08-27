@@ -30,6 +30,8 @@ module app.controllers.select {
 
         selectedStory: string;
         stories: string[];
+
+        getCandidateTreeWithSelections: () => data.IInstanceNode;
     }
 
     export class selectController
@@ -39,6 +41,8 @@ module app.controllers.select {
         dataGenerationService: any;
         getService: any;
         $modal: any;
+
+        featureFormFields: {};
 
         constructor($scope:ISelectScope, getService, dataGenerationService, $filter, $modal)
         {
@@ -53,6 +57,10 @@ module app.controllers.select {
                 .error(this.errorHandler);
 
             $scope.events = this;
+
+            $scope.$watch("candidateTree", function() {
+               $scope.aliases = null;
+            })
         }
 
         updateDataset()
@@ -109,7 +117,7 @@ module app.controllers.select {
         openAliasModal = (): void => {
             var self = this;
 
-            var clonedCandidateTree = _.clone(self.$scope.candidateTree, true);
+            var clonedCandidateTreeWithCharSelections = self.$scope.getCandidateTreeWithSelections();
 
             var modalInstance = this.$modal.open({
                 templateUrl: 'scripts/controllers/aliasModalInstanceController/aliasModalInstanceTpl.html',
@@ -120,7 +128,7 @@ module app.controllers.select {
                         return self.$scope.specificationTree;
                     },
                     candidateTree: function() {
-                        return self.dataGenerationService.generateTransformedCandidateTree(clonedCandidateTree, null, true);
+                        return self.dataGenerationService.generateTransformedCandidateTree(clonedCandidateTreeWithCharSelections, null, true);
                     },
                     aliases: function() {
                         return self.$scope.aliases;
@@ -135,6 +143,8 @@ module app.controllers.select {
 
         openFeatureGenerationModal = (): void => {
             var self = this;
+
+            var clonedCandidateTreeWithCharSelections = self.$scope.getCandidateTreeWithSelections();
 
             var modalInstance = this.$modal.open({
                 templateUrl: 'scripts/controllers/featureGenerationModalInstanceController/featureGenerationModalInstanceTpl.html',
@@ -151,11 +161,17 @@ module app.controllers.select {
                         return self.$scope.aliases;
                     },
                     candidateTree: function() {
-                        return self.$scope.candidateTree;
+                        return clonedCandidateTreeWithCharSelections;
+                    },
+                    featureFormFields: function() {
+                        return self.featureFormFields;
                     }
                 }
             });
 
+            modalInstance.result.then(function(featureFormFields) {
+                self.featureFormFields = featureFormFields;
+            })
         };
 
         drawGraph = (): void =>

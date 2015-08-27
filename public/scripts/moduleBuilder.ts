@@ -52,9 +52,9 @@ module moduleBuilder {
                         => new app.controllers.aliasModalInstance.aliasModalInstanceController($scope, $modalInstance, specificationTree, candidateTree, aliases, exportService)]);
 
             this.angularModule.controller("featureGenerationModalInstanceController",
-                ["$scope", "$modalInstance", "selectedStory", "specificationTree", "candidateTree", "aliases", "exportService", "featureBuilderService",
-                    ($scope, $modalInstance, selectedStory, specificationTree, candidateTree, aliases, exportService, featureBuilderService)
-                        => new app.controllers.featureGenerationModalInstance.featureGenerationModalInstanceController($scope, $modalInstance, selectedStory, specificationTree, candidateTree, aliases, exportService, featureBuilderService)]);
+                ["$scope", "$modalInstance", "selectedStory", "specificationTree", "candidateTree", "aliases", "exportService", "featureBuilderService", "featureFormFields",
+                    ($scope, $modalInstance, selectedStory, specificationTree, candidateTree, aliases, exportService, featureBuilderService, featureFormFields)
+                        => new app.controllers.featureGenerationModalInstance.featureGenerationModalInstanceController($scope, $modalInstance, selectedStory, specificationTree, candidateTree, aliases, exportService, featureBuilderService, featureFormFields)]);
 
             this.angularModule.controller("selectController",
                 ["$scope", "getService", "dataGenerationService", "$filter", "$modal",

@@ -92,6 +92,7 @@ module app.services.featureBuilderServices {
          */
         public generateFeature(): string {
             var featureString = "#" + this.storyNo + "\n@:CommonSteps\n\n";
+            console.log(this.candidateTree);
 
             //Feature description:
             featureString = featureString + "Feature:\n\t" + this.feature + "\n\n";
@@ -164,7 +165,7 @@ module app.services.featureBuilderServices {
             featureString += childEntityTableAndContext.table.string;
 
             var requestTableCharacteristicUseInstances: IPropertyValues = {
-                evaluateTrueRule: InstanceTreeUtilities.isCharacteristicUseNode,
+                evaluateTrueRule: InstanceTreeUtilities.hasAddedCharacteristics,
                 properties: [
                     {"propertyName": "guid", "outputPropertyName": "CharacteristicID", useAlias: true},
                     {"propertyName": "useArea", "outputPropertyName": "UseArea", useAlias: false}
@@ -177,7 +178,7 @@ module app.services.featureBuilderServices {
 
 
             var requestTableConfiguredValueInstances: IPropertyValues = {
-                evaluateTrueRule: InstanceTreeUtilities.isCharacteristicUseNode,
+                evaluateTrueRule: InstanceTreeUtilities.isUDCNode,
                 properties: [
                     {"propertyName": "guid", "outputPropertyName": "CharacteristicID", useAlias: true},
                     {"propertyName": "useArea", "outputPropertyName": "UseArea", useAlias: false}
@@ -190,16 +191,15 @@ module app.services.featureBuilderServices {
 
 
             var requestTableValueInstances: IPropertyValues = {
-                evaluateTrueRule: InstanceTreeUtilities.isSelectableCharacteristicNode,
+                evaluateTrueRule: InstanceTreeUtilities.isAnAddedCharacteristic,
                 omitContextName: true,
                 properties: [
-                    {"propertyName": "guid", "outputPropertyName": "Value", useAlias: true},
+                    {"propertyName": "guid", "outputPropertyName": "ValueID", useAlias: true},
                 ]
             };
 
             var characteristicValueTableAndContext = this.writeInstancesTableFromArray(characteristicUseTableAndContext.contextNodes, "\t\t\t", "Value", requestTableValueInstances);
             featureString += characteristicValueTableAndContext.table.string;
-
 
             return featureString;
         }

@@ -16,9 +16,15 @@ module app.controllers.aliasModalInstance {
         exportService: any;
 
         specNodesInTree: Array<data.IInstanceNode>;
-        candidateNodesInTree: Array<data.ICandidateExportNode>;
-        aliases: data.IAliases;
 
+        orderItemNodes:  Array<data.ICandidateExportNode>;
+        charUseNodes: Array<data.ICandidateExportNode>;
+        charValueNodes: Array<data.ICandidateExportNode>;
+
+        aliases: data.IAliases;
+        candidateTable: {
+            selected: string;
+        }
     }
 
     export class aliasModalInstanceController {
@@ -31,8 +37,18 @@ module app.controllers.aliasModalInstance {
             this.$scope = $scope;
             this.exportService = exportService;
 
+            $scope.candidateTable = {selected: "orderItems"};
+
+            this.$scope.specNodesInTree = [];
+            this.$scope.orderItemNodes = [];
+            this.$scope.charUseNodes = [];
+            this.$scope.charValueNodes = [];
+
             this.buildSpecificationNodeArray(specificationTree, aliases);
+            if (aliases == null) aliases = this.buildAliases();
             this.buildCandidateNodeArray(candidateTree, aliases);
+
+            this.$scope.aliases = null;
 
             $scope.events = this;
         }
@@ -52,13 +68,23 @@ module app.controllers.aliasModalInstance {
                     aliases[node.text + "-BUID"] = node.BUID;
             }
 
-            for (var nodeIdx = 0; nodeIdx < this.$scope.candidateNodesInTree.length; nodeIdx++) {
-                var candidateNode: data.ICandidateExportNode = this.$scope.candidateNodesInTree[nodeIdx];
+            for (var nodeIdx = 0; nodeIdx < this.$scope.orderItemNodes.length; nodeIdx++) {
+                var orderItemNode: data.ICandidateExportNode = this.$scope.orderItemNodes[nodeIdx];
 
-                if (aliases[candidateNode.text] == null)
-                    aliases[candidateNode.text] = candidateNode.ID;
+                if (aliases[orderItemNode.text] == null)
+                    aliases[orderItemNode.text] = orderItemNode.ID;
                 else
-                    aliases[candidateNode.text + "_" + nodeIdx] = candidateNode.ID;
+                    aliases[orderItemNode.text + "_" + nodeIdx] = orderItemNode.ID;
+            }
+
+            for (var nodeIdx = 0; nodeIdx < this.$scope.charUseNodes.length; nodeIdx++) {
+                var charUseNode: data.ICandidateExportNode = this.$scope.charUseNodes[nodeIdx];
+
+                if (aliases[charUseNode.text] == null)
+                    aliases[charUseNode.text] = charUseNode.CharacteristicID;
+                else
+                    aliases[charUseNode.text + "_" + nodeIdx] = charUseNode.CharacteristicID;
+
             }
 
             aliases["Commercial_SpecCharUse_SchemaElementGuid"] = "a736c895-2ea7-432b-b0cd-63409fd0b00f";
@@ -70,7 +96,7 @@ module app.controllers.aliasModalInstance {
         }
 
         buildSpecificationNodeArray(specificationTree:data.IInstanceNode, aliases: data.IAliases): void {
-            this.$scope.specNodesInTree = _.uniq(_.clone(InstanceTreeUtilities.flattenTreeIntoArray(specificationTree, "children"), true), "guid");
+            this.$scope.specNodesInTree = _.uniq(_.clone(InstanceTreeUtilities.flattenTreeIntoArray(specificationTree, ["children"]), true), "guid");
 
             for (var nodeIdx = 0; nodeIdx < this.$scope.specNodesInTree.length; nodeIdx++) {
                 var node = this.$scope.specNodesInTree[nodeIdx];
@@ -79,28 +105,42 @@ module app.controllers.aliasModalInstance {
 
                 if (aliases != null && keyInAliases != null)
                     node.text = keyInAliases;
-                else if (aliases != null && keyInAliases == null)
-                    this.$scope.specNodesInTree.splice(nodeIdx--, 1);
                 else
                     node.text = node.text.replace(/ /g,'_');
             }
         }
 
         buildCandidateNodeArray(candidateTree:data.ICandidateExportNode, aliases: data.IAliases): void {
-            this.$scope.candidateNodesInTree = _.uniq(_.clone(InstanceTreeUtilities.flattenTreeIntoArray(candidateTree, "ChildEntity"), true), "ID")
+            var candidateNodesInTree = _.clone(InstanceTreeUtilities.flattenTreeIntoArray(candidateTree, ["ChildEntity", "CharacteristicUse", "ConfiguredValue", "Value"]), true)
 
-            for (var nodeIdx = 0; nodeIdx < this.$scope.candidateNodesInTree.length; nodeIdx++) {
-                var node = this.$scope.candidateNodesInTree[nodeIdx];
+            var charUses: number = 0;
+            var orderItems: number = 0;
+            var charValues: number = 0;
 
-                var keyInAliases = this.getKeyByValue(aliases, node.ID);
+            for (var nodeIdx = 0; nodeIdx < candidateNodesInTree.length; nodeIdx++) {
+                var node = candidateNodesInTree[nodeIdx];
+
+                var keyInAliases = this.getKeyByValue(aliases, node.ID || node.CharacteristicID || node.ValueID);
 
                 if (aliases != null && keyInAliases != null)
                     node.text = keyInAliases;
-                else if (aliases != null && keyInAliases == null)
-                    this.$scope.candidateNodesInTree.splice(nodeIdx--, 1);
-                else
-                    node.text = "oi_" + (nodeIdx+1);
+
+                if (node.CharacteristicID) {
+                    node.text = node.text || "char_" + (++charUses);
+                    this.$scope.charUseNodes.push(node);
+                }
+                else if (node.ValueID) {
+                    node.text = node.text || "charValue_" + (++charValues);
+                    this.$scope.charValueNodes.push(node);
+                }
+                else {
+                    node.text = node.text || "oi_" + (++orderItems);
+                    this.$scope.orderItemNodes.push(node);
+                }
+
+
             }
+
         }
 
         downloadAliases(): void {
@@ -115,10 +155,6 @@ module app.controllers.aliasModalInstance {
         updateAliasesAndClose() {
             var aliases: data.IAliases = this.buildAliases();
             this.$modalInstance.close(aliases);
-        }
-
-        removeFromArray(array: Array<any>, $index: number) {
-            array.splice($index, 1);
         }
 
         getKeyByValue(object, value): string {

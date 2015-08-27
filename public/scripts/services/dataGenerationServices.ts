@@ -105,7 +105,6 @@ module app.services.dataGenerationServices {
 
 
         public generateTransformedCandidateTree(treeNode: any, parentNode:data.ICandidateExportNode, ignoreErrors: boolean): data.ICandidateExportNode {
-
             if (InstanceTreeUtilities.isUDCNode(treeNode)) {
                 if (treeNode.children.length == 0 ) {
                     return null;

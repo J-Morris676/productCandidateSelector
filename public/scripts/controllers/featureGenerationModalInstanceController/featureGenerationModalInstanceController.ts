@@ -49,7 +49,8 @@ module app.controllers.featureGenerationModalInstance {
 
         }
 
-        constructor($scope:IAliasModalScope, $modalInstance:any, selectedStory: string, specificationTree:data.IInstanceNode, candidateTree:data.IInstanceNode, aliases: data.IAliases, exportService: any, featureBuilderService: any) {
+        constructor($scope:IAliasModalScope, $modalInstance:any, selectedStory: string, specificationTree:data.IInstanceNode, candidateTree:data.IInstanceNode,
+                    aliases: data.IAliases, exportService: any, featureBuilderService: any, featureFormFields: any) {
             this.$modalInstance = $modalInstance;
             this.$scope = $scope;
             this.exportService = exportService;
@@ -61,6 +62,8 @@ module app.controllers.featureGenerationModalInstance {
             this.$scope.specificationTree = specificationTree;
             this.$scope.candidateTree = candidateTree;
             this.$scope.aliases= aliases;
+
+            this.$scope.formFields = featureFormFields || this.$scope.formFields;
 
             $scope.events = this;
         }
@@ -78,6 +81,10 @@ module app.controllers.featureGenerationModalInstance {
             this.featureBuilderService.setRequestPath(scope.formFields.requestPath);
 
             scope.featureString = this.featureBuilderService.generateFeature();
+        }
+
+        close() {
+            this.$modalInstance.close(this.$scope.formFields);
         }
     }
 }

@@ -120,17 +120,23 @@ module InstanceTreeUtilities {
         return null;
     }
 
-    export function flattenTreeIntoArray(treeRoot: any, childProperty: string): Array<any> {
+    export function flattenTreeIntoArray(treeRoot: any, childProperties: Array<string>): Array<any> {
         var flattenedArray: Array<data.IInstanceNode> = [];
 
         flattenedArray.push(treeRoot);
 
-        if (treeRoot[childProperty] != null) {
-            for (var childIdx = 0; childIdx < treeRoot[childProperty].length; childIdx++) {
-                var childIndexes: Array<any> = flattenTreeIntoArray(treeRoot[childProperty][childIdx], childProperty);
-                flattenedArray = flattenedArray.concat(childIndexes);
+        for (var childPropertiesIdx = 0; childPropertiesIdx < childProperties.length; childPropertiesIdx++) {
+            var childProperty = childProperties[childPropertiesIdx];
+
+            if (treeRoot[childProperty] != null) {
+                for (var childIdx = 0; childIdx < treeRoot[childProperty].length; childIdx++) {
+                    var childIndexes: Array<any> = flattenTreeIntoArray(treeRoot[childProperty][childIdx], childProperties);
+                    flattenedArray = flattenedArray.concat(childIndexes);
+                }
             }
         }
+
+
 
         return flattenedArray;
     }
@@ -180,6 +186,22 @@ module InstanceTreeUtilities {
         else {
             return false;
         }
+    }
+
+    export function hasAddedCharacteristics(node: data.IInstanceNode): boolean {
+        if (node == null) return false;
+
+        if (checkedCharacteristicsAmount(node) > 0) return true;
+
+        return false;
+    }
+
+    export function isAnAddedCharacteristic(node: data.ISelectableCharInstanceNode): boolean {
+        if (node == null) return false;
+
+        if (node.checked == true) return true;
+
+        return false;
     }
 
     export function canAddCharacteristic(node: data.IInstanceNode): boolean {

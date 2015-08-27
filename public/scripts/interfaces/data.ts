@@ -78,6 +78,8 @@ module data {
         CharacteristicUse?: any;
         ConfiguredValue?: any;
         text?: any;
+
+        CharacteristicID?: string;
     }
 
     export interface IAliases {
