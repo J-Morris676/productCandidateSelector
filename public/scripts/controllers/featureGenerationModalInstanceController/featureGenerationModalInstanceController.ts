@@ -68,8 +68,9 @@ module app.controllers.featureGenerationModalInstance {
             $scope.events = this;
         }
 
-        generateFeatureString(): void {
+        generateFeatureString(): string {
             var scope = this.$scope;
+
             this.featureBuilderService.setStoryNo(scope.formFields.storyNo);
             this.featureBuilderService.setAliases(scope.aliases);
             this.featureBuilderService.setSpecificationTree(scope.specificationTree);
@@ -81,6 +82,15 @@ module app.controllers.featureGenerationModalInstance {
             this.featureBuilderService.setRequestPath(scope.formFields.requestPath);
 
             scope.featureString = this.featureBuilderService.generateFeature();
+
+            return scope.featureString;
+        }
+
+        downloadFeatureFile(): void {
+            var self = this;
+            self.exportService.postFeature(self.generateFeatureString()).success(function (response) {
+                self.exportService.downloadFeatureFile(response.ID, self.$scope.formFields.storyNo);
+            });
         }
 
         close() {

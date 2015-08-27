@@ -44,7 +44,9 @@ module InstanceTreeUtilities {
 
     export function isEnteredUDCNode(treeNode: data.IInstanceNode): boolean {
         if (treeNode == null) return false;
-        if (treeNode.value != null) return true;
+        var selectableUDCNode = <data.ISelectableUDCInstanceNode> treeNode;
+
+        if (selectableUDCNode.value != null) return true;
         if (treeNode.type == "TUserDefinedCharacteristicValue") {
             return treeNode.children.some(function(child: data.ISelectableUDCInstanceNode) {
                 return (child.value != null)

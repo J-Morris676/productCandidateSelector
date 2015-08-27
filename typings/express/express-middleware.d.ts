@@ -6,6 +6,7 @@ declare module "body-parser" {
     module bodyParser {
         function urlencoded(opts?: any): express.RequestHandler;
         function json(): express.RequestHandler;
+        function text(): express.RequestHandler;
     }
     export = bodyParser;
 }

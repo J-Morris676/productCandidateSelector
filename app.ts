@@ -31,8 +31,12 @@ var candidateTreeCount = 0;
 var aliases = {};
 var aliasesCount = 0;
 
+var features = {};
+var featuresCount = 0;
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.text());
 
 app.use(express.static(__dirname + '/public'));
 
@@ -118,6 +122,28 @@ app.get("/api/candidateTrees/:ID", function(req, res) {
     delete candidateTrees[req.params.ID];
 });
 
+app.post("/api/features", function(req, res) {
+    logger.info("POST: Saving Feature");
 
+    var ID = ++featuresCount;
+    features[featuresCount.toString()] = req.body;
+
+    res.json({
+        "ID": ID
+    })
+});
+
+app.get("/api/features/:ID", function(req, res) {
+    logger.info("GET: Feature " + req.params.ID);
+
+    var fileName = req.query.fileName || "feature";
+    fileName += ".feature\"";
+
+    res.setHeader("Content-Disposition", "attachment; filename=\"" + fileName);
+    res.setHeader('Content-Type', 'text/plain');
+    res.send(features[req.params.ID]);
+
+    delete features[req.params.ID];
+});
 
 app.listen(3000);

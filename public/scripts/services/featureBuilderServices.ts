@@ -92,7 +92,6 @@ module app.services.featureBuilderServices {
          */
         public generateFeature(): string {
             var featureString = "#" + this.storyNo + "\n@:CommonSteps\n\n";
-            console.log(this.candidateTree);
 
             //Feature description:
             featureString = featureString + "Feature:\n\t" + this.feature + "\n\n";

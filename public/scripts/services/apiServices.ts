@@ -62,5 +62,18 @@ module app.services.apiServices {
             var downloadFrame = document.getElementById('aliases-download-frame');
             downloadFrame.setAttribute("src", "/api/aliases/" + aliasId)
         };
+
+        postFeature = (feature: string):ng.IPromise<any> => {
+            return this.$http.post("/api/features", feature, {
+                headers: {
+                    'Content-Type': "text/plain"
+                },
+            })
+        };
+
+        downloadFeatureFile = (featureId: number, storyNo: string):void => {
+            var downloadFrame = document.getElementById('feature-download-frame');
+            downloadFrame.setAttribute("src", "/api/features/" + featureId + "?fileName=" + storyNo);
+        };
     }
 }
