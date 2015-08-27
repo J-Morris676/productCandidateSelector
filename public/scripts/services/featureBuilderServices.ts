@@ -176,20 +176,6 @@ module app.services.featureBuilderServices {
 
             featureString += characteristicUseTableAndContext.table.string;
 
-
-            var requestTableConfiguredValueInstances: IPropertyValues = {
-                evaluateTrueRule: InstanceTreeUtilities.isUDCNode,
-                properties: [
-                    {"propertyName": "guid", "outputPropertyName": "CharacteristicID", useAlias: true},
-                    {"propertyName": "useArea", "outputPropertyName": "UseArea", useAlias: false}
-                ]
-            };
-
-            var configuredValueTableAndContext = this.writeInstancesTableFromArray(childEntityTableAndContext.contextNodes, "\t\t\t", "ConfiguredValue", requestTableConfiguredValueInstances);
-
-            featureString += configuredValueTableAndContext.table.string;
-
-
             var requestTableValueInstances: IPropertyValues = {
                 evaluateTrueRule: InstanceTreeUtilities.isAnAddedCharacteristic,
                 omitContextName: true,
@@ -199,6 +185,30 @@ module app.services.featureBuilderServices {
             };
 
             var characteristicValueTableAndContext = this.writeInstancesTableFromArray(characteristicUseTableAndContext.contextNodes, "\t\t\t", "Value", requestTableValueInstances);
+            featureString += characteristicValueTableAndContext.table.string;
+
+
+            var requestTableConfiguredValueInstances: IPropertyValues = {
+                evaluateTrueRule: InstanceTreeUtilities.isEnteredUDCNode,
+                properties: [
+                    {"propertyName": "guid", "outputPropertyName": "CharacteristicID", useAlias: true},
+                    {"propertyName": "useArea", "outputPropertyName": "UseArea", useAlias: false}
+                ]
+            };
+
+            var configuredValueTableAndContext = this.writeInstancesTableFromArray(childEntityTableAndContext.contextNodes, "\t\t\t", "ConfiguredValue", requestTableConfiguredValueInstances);
+            featureString += configuredValueTableAndContext.table.string;
+
+
+            var requestTableValueInstances: IPropertyValues = {
+                evaluateTrueRule: InstanceTreeUtilities.isEnteredUDCNode,
+                omitContextName: true,
+                properties: [
+                    {"propertyName": "value", "outputPropertyName": "Value", useAlias: false},
+                ]
+            };
+
+            var characteristicValueTableAndContext = this.writeInstancesTableFromArray(configuredValueTableAndContext.contextNodes, "\t\t\t", "Value", requestTableValueInstances);
             featureString += characteristicValueTableAndContext.table.string;
 
             return featureString;

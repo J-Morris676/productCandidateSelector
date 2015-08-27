@@ -111,7 +111,7 @@ module app.controllers.aliasModalInstance {
         }
 
         buildCandidateNodeArray(candidateTree:data.ICandidateExportNode, aliases: data.IAliases): void {
-            var candidateNodesInTree = _.clone(InstanceTreeUtilities.flattenTreeIntoArray(candidateTree, ["ChildEntity", "CharacteristicUse", "ConfiguredValue", "Value"]), true)
+            var candidateNodesInTree = _.clone(InstanceTreeUtilities.flattenTreeIntoArray(candidateTree, ["ChildEntity", "CharacteristicUse", "ConfiguredValue"]), true)
 
             var charUses: number = 0;
             var orderItems: number = 0;
@@ -126,19 +126,23 @@ module app.controllers.aliasModalInstance {
                     node.text = keyInAliases;
 
                 if (node.CharacteristicID) {
-                    node.text = node.text || "char_" + (++charUses);
+                    node.text = node.text || ("char_" + (++charUses));
                     this.$scope.charUseNodes.push(node);
                 }
                 else if (node.ValueID) {
-                    node.text = node.text || "charValue_" + (++charValues);
+                    node.text = node.text || ("charValue_" + (++charValues));
                     this.$scope.charValueNodes.push(node);
                 }
                 else {
-                    node.text = node.text || "oi_" + (++orderItems);
+                    if (node.text != null) {
+                        node.text = node.text
+                    }
+                    else {
+                        node.text = "oi_" + (++orderItems);
+                    }
+
                     this.$scope.orderItemNodes.push(node);
                 }
-
-
             }
 
         }

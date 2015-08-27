@@ -61,6 +61,7 @@ module app.services.dataGenerationServices {
                 node.text = instanceData.Value;
             }
             else if (instanceMeta.ElementKind == "TUserDefinedCharacteristicValue") {
+                node.useArea = parentToChildRelationship.Kind;
                 node.text = instanceData.Name;
             }
             else if (instanceMeta.ElementKind == "TSpecChar") {

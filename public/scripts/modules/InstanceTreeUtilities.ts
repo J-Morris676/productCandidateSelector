@@ -1,9 +1,4 @@
-/**
- * Created by JamieM on 28/07/2015.
- */
-
 /// <reference path="../interfaces/data.ts" />
-
 
 module InstanceTreeUtilities {
     export function isOneToOneCardinality(treeNode: data.IInstanceNode): boolean {
@@ -39,11 +34,21 @@ module InstanceTreeUtilities {
         return false;
     }
 
-
     export function isSelectableCharacteristicNode(treeNode: data.IInstanceNode): boolean {
         if (treeNode == null) return false;
         if (treeNode.type == "TSpecCharValue") {
             return true;
+        }
+        return false;
+    }
+
+    export function isEnteredUDCNode(treeNode: data.IInstanceNode): boolean {
+        if (treeNode == null) return false;
+        if (treeNode.value != null) return true;
+        if (treeNode.type == "TUserDefinedCharacteristicValue") {
+            return treeNode.children.some(function(child: data.ISelectableUDCInstanceNode) {
+                return (child.value != null)
+            });
         }
         return false;
     }
@@ -131,6 +136,11 @@ module InstanceTreeUtilities {
             if (treeRoot[childProperty] != null) {
                 for (var childIdx = 0; childIdx < treeRoot[childProperty].length; childIdx++) {
                     var childIndexes: Array<any> = flattenTreeIntoArray(treeRoot[childProperty][childIdx], childProperties);
+
+                    for (var child in childIndexes)
+                        if (typeof childIndexes[child] != "object")
+                            continue;
+
                     flattenedArray = flattenedArray.concat(childIndexes);
                 }
             }
@@ -231,6 +241,15 @@ module InstanceTreeUtilities {
             return false;
         }
     }
+
+    export function isAnEnteredCharacteristic(node: data.ISelectableUDCInstanceNode): boolean {
+        if (node == null) return false;
+
+        if (node.checked == true) return true;
+
+        return false;
+    }
+
 
     function checkedCharacteristicsAmount(node: data.IInstanceNode): number {
         if (node == null) return null;
