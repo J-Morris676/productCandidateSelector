@@ -2,7 +2,13 @@
 
 /// <reference path="services/apiServices.ts" />
 /// <reference path="services/dataGenerationServices.ts" />
-/// <reference path="services/featureBuilderServices.ts" />
+/// <reference path="services/features/featureBuilderServices.ts" />
+
+/// <reference path="services/features/steps/stepBuilderService.ts" />
+/// <reference path="services/features/steps/tableSteps/instanceTableService.ts" />
+/// <reference path="services/features/steps/tableSteps/propertyTableService.ts" />
+/// <reference path="services/features/featureBuilderUtils.ts" />
+
 /// <reference path="filters/selectFilters.ts" />
 /// <reference path="controllers/selectController.ts" />
 /// <reference path="controllers/aliasModalInstanceController/aliasModalInstanceController.ts" />
@@ -29,8 +35,21 @@ module moduleBuilder {
             this.angularModule.service("dataGenerationService", [()
                 => new app.services.dataGenerationServices.dataGenerationService()]);
 
-            this.angularModule.service("featureBuilderService", ["dataGenerationService", (dataGenerationService)
-                => new app.services.featureBuilderServices.featureBuilderService(dataGenerationService)]);
+            this.angularModule.service("featureBuilderUtils", [()
+                => new  app.services.featureBuilderUtils.featureBuilderUtils()]);
+
+            this.angularModule.service("stepBuilderService", [()
+                => new  app.services.stepBuilderServices.stepBuilderService()]);
+
+            this.angularModule.service("instanceTableService", ["featureBuilderUtils", (featureBuilderUtils)
+                => new  app.services.instanceTableServices.instanceTableService(featureBuilderUtils)]);
+
+            this.angularModule.service("propertyTableService", ["featureBuilderUtils", (featureBuilderUtils)
+                => new  app.services.propertyTableServices.propertyTableService(featureBuilderUtils)]);
+
+            this.angularModule.service("featureBuilderService", ["dataGenerationService", "stepBuilderService", "instanceTableService", "propertyTableService", "featureBuilderUtils",
+                (dataGenerationService, stepBuilderService, instanceTableService, propertyTableService, featureBuilderUtils)
+                => new app.services.featureBuilderServices.featureBuilderService(dataGenerationService, stepBuilderService, instanceTableService, propertyTableService, featureBuilderUtils)]);
 
             return this;
         }

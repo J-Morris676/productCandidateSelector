@@ -3,7 +3,7 @@
 
 /// <reference path="../../interfaces/data.ts" />
 /// <reference path="../../modules/InstanceTreeUtilities.ts" />
-/// <reference path="../../services/featureBuilderServices.ts" />
+/// <reference path="../../services/features/featureBuilderServices.ts" />
 
 module app.controllers.featureGenerationModalInstance {
     'use strict';

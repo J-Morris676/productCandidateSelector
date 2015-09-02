@@ -1,0 +1,5 @@
+CorrelationId : 6f94c0fb-54a8-4b8a-acfe-dc0db9d7dbd2
+ContextName : Publish Logical Catalog
+DateTime : 2015-08-05 T12:33:29:93
+ContextType : LogicalCatalog
+ChangesetItemGuid : 34f0eae7-515d-4135-a806-74a7ca8d3464
