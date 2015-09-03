@@ -85,4 +85,17 @@ module data {
     export interface IAliases {
         [name: string]: string;
     }
+
+    export interface IFeature {
+        storyNo: string;
+        aliases: IAliases;
+        specificationTree: IInstanceNode;
+        candidateTree: IInstanceNode;
+
+        description: string;
+        dataPath: string;
+        aliasPath: string;
+        scenario: string;
+        requestPath: string;
+    }
 }

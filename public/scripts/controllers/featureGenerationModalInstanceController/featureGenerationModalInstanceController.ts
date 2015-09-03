@@ -71,15 +71,20 @@ module app.controllers.featureGenerationModalInstance {
         generateFeatureString(): string {
             var scope = this.$scope;
 
-            this.featureBuilderService.setStoryNo(scope.formFields.storyNo);
-            this.featureBuilderService.setAliases(scope.aliases);
-            this.featureBuilderService.setSpecificationTree(scope.specificationTree);
-            this.featureBuilderService.setCandidateTree(scope.candidateTree);
-            this.featureBuilderService.setFeature(scope.formFields.feature);
-            this.featureBuilderService.setDataPath(scope.formFields.dataPath);
-            this.featureBuilderService.setAliasPath(scope.formFields.aliasPath);
-            this.featureBuilderService.setScenario(scope.formFields.scenario);
-            this.featureBuilderService.setRequestPath(scope.formFields.requestPath);
+            var feature: data.IFeature = {
+                storyNo: scope.formFields.storyNo,
+                aliases: scope.aliases,
+                specificationTree: scope.specificationTree,
+                candidateTree: scope.candidateTree,
+
+                description: scope.formFields.feature,
+                dataPath: scope.formFields.dataPath,
+                aliasPath: scope.formFields.aliasPath,
+                scenario: scope.formFields.scenario,
+                requestPath: scope.formFields.requestPath
+            };
+
+            this.featureBuilderService.setFeature(feature);
 
             scope.featureString = this.featureBuilderService.generateFeature();
 

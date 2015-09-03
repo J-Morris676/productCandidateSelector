@@ -15,16 +15,7 @@ module app.services.featureBuilderServices {
 
     export class featureBuilderService {
 
-        private storyNo: string;
-        private aliases: data.IAliases;
-        private specificationTree: data.IInstanceNode;
-        private candidateTree: data.IInstanceNode;
-
-        private feature: string;
-        private dataPath: string;
-        private aliasPath: string;
-        private scenario: string;
-        private requestPath: string;
+        private feature: data.IFeature;
 
         static $inject = ["dataGenerationService", "stepBuilderService", "instanceTableService", "propertyTableService", "featureBuilderUtils"];
         constructor(public dataGenerationService: any,
@@ -33,39 +24,8 @@ module app.services.featureBuilderServices {
                     public propertyTableService: propertyTableServices.propertyTableService,
                     public featureBuilderUtils: featureBuilderUtils.featureBuilderUtils) { }
 
-        public setStoryNo(storyNo: string): void {
-            this.storyNo = storyNo;
-        }
-
-        public setAliases(aliases: data.IAliases): void {
-            this.aliases = aliases;
-        }
-
-        public setSpecificationTree(specificationTree: data.IInstanceNode): void {
-            this.specificationTree = specificationTree;
-        }
-
-        public setCandidateTree(candidateTree: data.IInstanceNode): void {
-            this.candidateTree = candidateTree;
-        }
-
-        public setFeature(feature: string): void {
+        public setFeature(feature: data.IFeature): void {
             this.feature = feature;
-        }
-
-        public setDataPath(dataPath: string): void {
-            this.dataPath = dataPath;
-        }
-
-        public setAliasPath(aliasPath: string): void {
-            this.aliasPath = aliasPath;
-        }
-
-        public setScenario(scenario: string): void {
-            this.scenario = scenario;
-        }
-        public setRequestPath(requestPath: string): void {
-            this.requestPath = requestPath;
         }
 
         /*
@@ -75,8 +35,8 @@ module app.services.featureBuilderServices {
             var stepBuilderService: stepBuilderServices.stepBuilderService = this.stepBuilderService;
             var featureBuilderUtils: featureBuilderUtils.featureBuilderUtils = this.featureBuilderUtils;
 
-            var aliasFile: featureTypes.IAliasFileLocation = featureBuilderUtils.splitAliasPath(this.aliasPath);
-            var productSpecAliasId = featureBuilderUtils.getKeyByValue(this.aliases, this.specificationTree.guid);
+            var aliasFile: featureTypes.IAliasFileLocation = featureBuilderUtils.splitAliasPath(this.feature.aliasPath);
+            var productSpecAliasId = featureBuilderUtils.getKeyByValue(this.feature.aliases, this.feature.specificationTree.guid);
             if (productSpecAliasId == null) {
                 alert("Error: Product specification alias couldn't be found.");
             }
@@ -84,23 +44,23 @@ module app.services.featureBuilderServices {
             stepBuilderService.resetSteps();
 
             //Single line steps:
-            var storyNoAndDependencies = "#" + this.storyNo + "\n@:CommonSteps";
-            var featureDescriptionStep = "Feature:\n\t" + featureBuilderUtils.wrapString(this.feature, 110, "\t");
+            var storyNoAndDependencies = "#" + this.feature.storyNo + "\n@:CommonSteps";
+            var featureDescriptionStep = "Feature:\n\t" + featureBuilderUtils.wrapString(this.feature.description, 110, "\t");
             var featureBackgroundStep = "Background:";
-            var runningServerStep = "Given a running server populated from \"" + this.dataPath;
+            var runningServerStep = "Given a running server populated from \"" + this.feature.dataPath;
             var aliasFileStep = "And the aliases for Feature \"" + aliasFile.fileName + "\" loaded from \"" + aliasFile.pathToFile + "\"\n\t\t";
             var dataStoreStep = "And the datastore contains a product spec with ID \"" + productSpecAliasId + "\"";
 
             var requestComment = "#---------- Request ---------------------\t\t";
-            var scenarioStep = "Scenario:\n\t\t\t" + featureBuilderUtils.wrapString(this.scenario, 110, "\t\t\t");
-            var jsonRequestLoadStep = "Given a \"ProductCandidate\" JSON request that is populated from \"" + this.requestPath + "\"";
-            var requestContainsStep = "And that \"request\" contains a \"ProductCandidate\""
+            var scenarioStep = "Scenario: " + featureBuilderUtils.wrapString(this.feature.scenario, 110, "\t\t\t");
+            var jsonRequestLoadStep = "Given a \"ProductCandidate\" JSON request that is populated from \"" + this.feature.requestPath + "\"";
+            var requestContainsStep = "And that \"request\" contains a \"ProductCandidate\"";
 
             //Table (and their resulting context) steps:
             var product_To_ProductTableAndContext: featureTypes.ITableAndContextNodes = this.getProduct_To_ProductTableAndContext();
             var requestPropertiesTable: string = this.getRequestPropertiesTable();
             var childEntityTableAndContext: featureTypes.ITableAndContextNodes = this.getRequestChildEntitiesTable();
-            var characteristicUseTableAndContext: featureTypes.ITableAndContextNodes = this.getRequestCharactertisticUseTable(childEntityTableAndContext.contextNodes);
+            var characteristicUseTableAndContext: featureTypes.ITableAndContextNodes = this.getRequestCharacteristicUseTable(childEntityTableAndContext.contextNodes);
             var characteristicValueTableAndContext: featureTypes.ITableAndContextNodes = this.getRequestCharacteristicUseValueTable(characteristicUseTableAndContext.contextNodes);
             var configuredValueTableAndContext: featureTypes.ITableAndContextNodes = this.getRequestConfiguredValueTable(childEntityTableAndContext.contextNodes);
             var configuredValueValuesTableAndContext: featureTypes.ITableAndContextNodes = this.getRequestConfiguredValueValuesTable(configuredValueTableAndContext.contextNodes);
@@ -147,7 +107,7 @@ module app.services.featureBuilderServices {
                 ]
             };
 
-            return this.instanceTableService.writeInstancesTableFromRoot(this.specificationTree, this.aliases, "\t\t", "Product_To_Product", "ProductSpec", requestTableProductToProductInstances);
+            return this.instanceTableService.writeInstancesTableFromRoot(this.feature.specificationTree, this.feature.aliases, "\t\t", "Product_To_Product", "ProductSpec", requestTableProductToProductInstances);
         }
 
         private getRequestPropertiesTable(): string {
@@ -159,7 +119,7 @@ module app.services.featureBuilderServices {
                 ]
             };
 
-            return this.propertyTableService.writePropertiesTable(this.candidateTree, this.aliases, "ProductCandidate", "\t\t\t", requestTableProperties);
+            return this.propertyTableService.writePropertiesTable(this.feature.candidateTree, this.feature.aliases, "ProductCandidate", "\t\t\t", requestTableProperties);
         }
 
         private getRequestChildEntitiesTable(): featureTypes.ITableAndContextNodes {
@@ -171,13 +131,13 @@ module app.services.featureBuilderServices {
                 ]
             };
 
-            var childEntityTableAndContext: featureTypes.ITableAndContextNodes = this.instanceTableService.writeInstancesTableFromRoot(this.candidateTree, this.aliases, "\t\t\t", "ChildEntity", "ProductCandidate", requestTableChildEntityInstances);
-            childEntityTableAndContext.contextNodes.unshift({"contextName": "ProductCandidate", node: this.candidateTree});
+            var childEntityTableAndContext: featureTypes.ITableAndContextNodes = this.instanceTableService.writeInstancesTableFromRoot(this.feature.candidateTree, this.feature.aliases, "\t\t\t", "ChildEntity", "ProductCandidate", requestTableChildEntityInstances);
+            childEntityTableAndContext.contextNodes.unshift({"contextName": "ProductCandidate", node: this.feature.candidateTree});
 
             return childEntityTableAndContext;
         }
 
-        private getRequestCharactertisticUseTable(contextNodes: Array<featureTypes.IContextNode>): featureTypes.ITableAndContextNodes {
+        private getRequestCharacteristicUseTable(contextNodes: Array<featureTypes.IContextNode>): featureTypes.ITableAndContextNodes {
             var requestTableCharacteristicUseInstances: featureTypes.IPropertyValues = {
                 evaluateTrueRule: InstanceTreeUtilities.hasAddedCharacteristics,
                 properties: [
@@ -186,7 +146,7 @@ module app.services.featureBuilderServices {
                 ]
             };
 
-            return this.instanceTableService.writeInstancesTableFromArray(contextNodes, this.aliases, "\t\t\t", "CharacteristicUse", requestTableCharacteristicUseInstances);
+            return this.instanceTableService.writeInstancesTableFromArray(contextNodes, this.feature.aliases, "\t\t\t", "CharacteristicUse", requestTableCharacteristicUseInstances);
         }
 
         private getRequestCharacteristicUseValueTable(contextNodes: Array<featureTypes.IContextNode>): featureTypes.ITableAndContextNodes {
@@ -198,7 +158,7 @@ module app.services.featureBuilderServices {
                     ]
             };
 
-            return this.instanceTableService.writeInstancesTableFromArray(contextNodes, this.aliases, "\t\t\t", "Value", requestTableValueInstances);
+            return this.instanceTableService.writeInstancesTableFromArray(contextNodes, this.feature.aliases, "\t\t\t", "Value", requestTableValueInstances);
         }
 
         private getRequestConfiguredValueTable(contextNodes: Array<featureTypes.IContextNode>): featureTypes.ITableAndContextNodes {
@@ -210,7 +170,7 @@ module app.services.featureBuilderServices {
                 ]
             };
 
-            return this.instanceTableService.writeInstancesTableFromArray(contextNodes, this.aliases, "\t\t\t", "ConfiguredValue", requestTableConfiguredValueInstances);
+            return this.instanceTableService.writeInstancesTableFromArray(contextNodes, this.feature.aliases, "\t\t\t", "ConfiguredValue", requestTableConfiguredValueInstances);
         }
 
         private getRequestConfiguredValueValuesTable(contextNodes: Array<featureTypes.IContextNode>): featureTypes.ITableAndContextNodes {
@@ -222,7 +182,7 @@ module app.services.featureBuilderServices {
                 ]
             };
 
-            return this.instanceTableService.writeInstancesTableFromArray(contextNodes, this.aliases, "\t\t\t", "Value", requestTableValueInstances);
+            return this.instanceTableService.writeInstancesTableFromArray(contextNodes, this.feature.aliases, "\t\t\t", "Value", requestTableValueInstances);
         }
     }
 }

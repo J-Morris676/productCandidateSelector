@@ -22,7 +22,7 @@ module app.services.apiServices {
 
         datasets = (): ng.IPromise<string[]> => {
             return this.$http.get("/api/data");
-        }
+        };
 
         instances = (storyNo: string):ng.IPromise<data.IInstances> =>
         {
@@ -54,7 +54,7 @@ module app.services.apiServices {
             downloadFrame.setAttribute("src", "/api/candidateTrees/" + candidateId + "?format=" + format)
         };
 
-        postAliases = (aliases: data.IAliases):ng.IPromise<any> => {
+        postAliases = (aliases: data.IAliases): ng.IPromise<any> => {
             return this.$http.post("/api/aliases", aliases)
         };
 
@@ -63,7 +63,7 @@ module app.services.apiServices {
             downloadFrame.setAttribute("src", "/api/aliases/" + aliasId)
         };
 
-        postFeature = (feature: string):ng.IPromise<any> => {
+        postFeature = (feature: string): ng.IPromise<any> => {
             return this.$http.post("/api/features", feature, {
                 headers: {
                     'Content-Type': "text/plain"
